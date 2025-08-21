@@ -13,6 +13,16 @@ import lombok.Data;
 @Data
 @Entity
 public class Categoria {
+
+    public Categoria() {
+    }
+
+    public Categoria(String descripcion, String nombre, String imagenUrl) {
+        this.descripcion = descripcion;
+        this.nombre = nombre;   
+        this.imagenUrl = imagenUrl;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

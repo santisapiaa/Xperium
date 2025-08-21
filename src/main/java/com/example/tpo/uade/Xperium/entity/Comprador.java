@@ -1,3 +1,4 @@
+/*
 package com.example.tpo.uade.Xperium.entity;
 
 import java.util.List;
@@ -34,3 +35,4 @@ public class Comprador {
     @OneToMany(mappedBy = "compradorId")
     private List<OrdenDeCompra> ordenesDeCompra;
 }
+ */

@@ -34,6 +34,6 @@ public class Categoria {
     @Column
     private String imagenUrl;
 
-    @OneToMany(mappedBy = "categoriaId")
-    private List<Producto> productos;
+    //@OneToMany(mappedBy = "categoriaId")
+    //private List<Producto> productos;
 }

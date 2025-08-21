@@ -1,3 +1,4 @@
+/* 
 package com.example.tpo.uade.Xperium.entity;
 
 import java.time.LocalDate;
@@ -35,3 +36,4 @@ public class OrdenDeCompra {
     private List<DetalleOrdenDeCompra> detalleOrdenDeCompra;
 
 }
+*/

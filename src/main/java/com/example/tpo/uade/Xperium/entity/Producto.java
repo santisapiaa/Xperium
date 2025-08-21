@@ -1,3 +1,4 @@
+/* 
 package com.example.tpo.uade.Xperium.entity;
 
 import jakarta.persistence.GeneratedValue;
@@ -48,3 +49,4 @@ public class Producto {
     @OneToMany(mappedBy = "producto")
     private List<DetalleOrdenDeCompra> detalleOrdenDeCompra;
 }
+*/

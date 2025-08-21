@@ -1,3 +1,4 @@
+/* 
 package com.example.tpo.uade.Xperium.entity;
 
 import jakarta.persistence.Column;
@@ -29,3 +30,4 @@ public class DetalleOrdenDeCompra {
     @JoinColumn(name = "ordenDeCompraId", nullable = false)
     private OrdenDeCompra ordenDeCompra;
 }
+*/

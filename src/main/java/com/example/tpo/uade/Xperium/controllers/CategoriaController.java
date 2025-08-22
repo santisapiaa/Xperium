@@ -63,7 +63,7 @@ public class CategoriaController {
     public ResponseEntity<Object> createCategoria(@RequestBody CategoriaRequest categoriaRequest)
             throws CategoriaDuplicadaException {
         // Crea una nueva categoría
-        Categoria resultado = categoriaService.createCategoria(categoriaRequest.getDescripcion(),categoriaRequest.getNombre(), categoriaRequest.getImagenUrl()); 
+        Categoria resultado = categoriaService.createCategoria(categoriaRequest.getDescripcion(), categoriaRequest.getImagenUrl()); 
         return ResponseEntity.created(URI.create("/categorias/" + resultado.getId())).body(resultado); // Retorna 201 Created con la ubicación de la nueva categoría
     }
     

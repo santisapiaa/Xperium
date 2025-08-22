@@ -14,7 +14,7 @@ public interface CategoriaService {
 
     public Optional<Categoria> getCategoriasById(Long id);
 
-    public Categoria createCategoria(String descripcion,String nombre, String imagenUrl) throws CategoriaDuplicadaException;
+    public Categoria createCategoria(String descripcion, String imagenUrl) throws CategoriaDuplicadaException;
 
     public void deleteCategoria(Long id);
     

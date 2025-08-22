@@ -25,10 +25,10 @@ public class CategoriaServiceImpl  implements CategoriaService {
        return categoriaRepository.findById(id);
     }
    
-    public Categoria createCategoria(String descripcion, String nombre, String imagenUrl) throws CategoriaDuplicadaException {
+    public Categoria createCategoria(String descripcion, String imagenUrl) throws CategoriaDuplicadaException {
         List<Categoria> categorias = categoriaRepository.findByDescription(descripcion);
         if (categorias.isEmpty()) {
-            return categoriaRepository.save(new Categoria(descripcion, nombre, imagenUrl)); //Guardo y retorno la nueva categoria
+            return categoriaRepository.save(new Categoria(descripcion, imagenUrl)); //Guardo y retorno la nueva categoria
         }
         throw new CategoriaDuplicadaException(); //Falta ver que hacer si ya existe la categoria
     }

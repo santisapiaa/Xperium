@@ -1,0 +1,47 @@
+package com.example.tpo.uade.Xperium.service;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
+
+import com.example.tpo.uade.Xperium.entity.Categoria;
+import com.example.tpo.uade.Xperium.entity.Producto;
+import com.example.tpo.uade.Xperium.exceptions.CategoriaDuplicadaException;
+import com.example.tpo.uade.Xperium.repository.ProductoRepository;
+
+
+@Service
+public class ProductoServiceImpl implements ProductoService {
+    
+    @Autowired
+    private ProductoRepository productoRepository;
+
+
+    public Page<Producto> getProducto(PageRequest pageRequest) {
+            return productoRepository.findAll(pageRequest);
+    }
+
+    public Optional<Producto> getCategoriasById(Long id) {
+        return productoRepository.findById(id);
+    }
+
+    public Producto createProducto(String nombre, String descripcion, String imagenUrl, double precio, String estado, int stock, String ubicacion, int cantPersonas,Categoria categoriaId) throws CategoriaDuplicadaException {
+            List<Producto> productos = productoRepository.findByNombre(nombre);
+            if (productos.isEmpty()) {
+                return productoRepository.save(new Producto(nombre,descripcion,imagenUrl,precio,estado
+                ,stock,ubicacion,cantPersonas,categoriaId));           
+            }
+            throw new CategoriaDuplicadaException();
+
+        }
+
+    public void deleteProducto(Long id) {
+        productoRepository.deleteById(id);
+    }
+    
+    
+}

@@ -1,4 +1,4 @@
-/* 
+
 package com.example.tpo.uade.Xperium.entity;
 
 import jakarta.persistence.GeneratedValue;
@@ -17,6 +17,9 @@ import lombok.Data;
 @Data
 @Entity
 public class Producto {
+
+    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -40,13 +43,28 @@ public class Producto {
 
     @ManyToOne
     @JoinColumn(name = "categoriaId", nullable = false)
-    private Categoria categoria;
+    private Categoria categoriaId;
 
-    @ManyToOne
-    @JoinColumn(name = "vendedorId", nullable = false)
-    private Proveedor vendedor;
+    public Producto() {
+    }
 
-    @OneToMany(mappedBy = "producto")
-    private List<DetalleOrdenDeCompra> detalleOrdenDeCompra;
+    public Producto(String nombre, String descripcion, String imagenUrl, double precio, String estado,
+            int stock, String ubicacion, int cantPersonas, Categoria categoriaId) {
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.imagenUrl = imagenUrl;
+        this.precio = precio;
+        this.estado = estado;
+        this.stock = stock;
+        this.ubicacion = ubicacion;
+        this.cantPersonas = cantPersonas;
+        this.categoriaId = categoriaId;
+    }
+
+    //@ManyToOne
+    //@JoinColumn(name = "vendedorId", nullable = false)
+    //private Proveedor vendedor;
+
+    //@OneToMany(mappedBy = "producto")
+    //private List<DetalleOrdenDeCompra> detalleOrdenDeCompra;
 }
-*/

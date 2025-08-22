@@ -1,12 +1,12 @@
 package com.example.tpo.uade.Xperium.service;
 
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Page;
+
 import com.example.tpo.uade.Xperium.entity.Categoria;
 import com.example.tpo.uade.Xperium.exceptions.CategoriaDuplicadaException;
 
 import java.util.Optional;
-
-import org.springframework.data.domain.Page;
 
 public interface CategoriaService {
 
@@ -17,6 +17,5 @@ public interface CategoriaService {
     public Categoria createCategoria(String descripcion, String imagenUrl) throws CategoriaDuplicadaException;
 
     public void deleteCategoria(Long id);
-    
-    
+
 }

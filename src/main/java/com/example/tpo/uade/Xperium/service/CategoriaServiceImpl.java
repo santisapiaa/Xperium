@@ -1,15 +1,16 @@
 package com.example.tpo.uade.Xperium.service;
+
 import org.springframework.data.domain.PageRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Service;
+
 import com.example.tpo.uade.Xperium.entity.Categoria;
 import com.example.tpo.uade.Xperium.exceptions.CategoriaDuplicadaException;
+import com.example.tpo.uade.Xperium.repository.CategoriaRepository;
 
 import java.util.List;
 import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import com.example.tpo.uade.Xperium.repository.CategoriaRepository;
-import org.springframework.stereotype.Service;
 
 @Service
 public class CategoriaServiceImpl  implements CategoriaService {

@@ -15,14 +15,6 @@ import lombok.Data;
 @Entity
 public class Categoria {
 
-    public Categoria() {
-    }
-
-    public Categoria(String descripcion, String imagenUrl) {
-        this.descripcion = descripcion;
-        this.imagenUrl = imagenUrl;
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -34,4 +26,12 @@ public class Categoria {
 
     //@OneToMany(mappedBy = "categoriaId")
     //private List<Producto> productos;
+
+    public Categoria() {
+    }
+
+    public Categoria(String descripcion, String imagenUrl) {
+        this.descripcion = descripcion;
+        this.imagenUrl = imagenUrl;
+    }
 }

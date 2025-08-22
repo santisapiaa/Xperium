@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class CategoriaRequest {
 
-    private int id;
+    private Long id;
     private String descripcion;
     private String imagenUrl;
 }

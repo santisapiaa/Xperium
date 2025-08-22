@@ -2,7 +2,6 @@ package com.example.tpo.uade.Xperium.entity.dto;
 
 import com.example.tpo.uade.Xperium.entity.Categoria;
 
-
 import lombok.Data;
 
 @Data

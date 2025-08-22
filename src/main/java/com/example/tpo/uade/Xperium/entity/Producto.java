@@ -18,8 +18,6 @@ import lombok.Data;
 @Entity
 public class Producto {
 
-    
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -42,7 +40,7 @@ public class Producto {
     private int cantPersonas;
 
     @ManyToOne
-    @JoinColumn(name = "categoriaId", nullable = false)
+    @JoinColumn(name = "categoriaId", referencedColumnName = "id",nullable = false)
     private Categoria categoriaId;
 
     public Producto() {

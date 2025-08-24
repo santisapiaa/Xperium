@@ -24,5 +24,5 @@ public class ProductoRequest {
  
     private int cantPersonas;
 
-    private Categoria categoriaId;
+    private Categoria categoria;
 }

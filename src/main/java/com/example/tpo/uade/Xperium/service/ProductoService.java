@@ -15,7 +15,7 @@ public interface ProductoService {
 
     public Optional<Producto> getProductoById(Long id);
 
-    public Producto createProducto(String nombre, String descripcion, String imagenUrl, double precio, String estado, int stock, String ubicacion, int cantPersonas,Categoria categoriaId) throws CategoriaDuplicadaException;
+    public Producto createProducto(String nombre, String descripcion, String imagenUrl, double precio, String estado, int stock, String ubicacion, int cantPersonas,Categoria categoria) throws CategoriaDuplicadaException;
     
     public void deleteProducto(Long id);
 }

@@ -41,13 +41,13 @@ public class Producto {
 
     @ManyToOne
     @JoinColumn(name = "categoriaId", referencedColumnName = "id",nullable = false)
-    private Categoria categoriaId;
+    private Categoria categoria;
 
     public Producto() {
     }
 
     public Producto(String nombre, String descripcion, String imagenUrl, double precio, String estado,
-            int stock, String ubicacion, int cantPersonas, Categoria categoriaId) {
+            int stock, String ubicacion, int cantPersonas, Categoria categoria) {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.imagenUrl = imagenUrl;
@@ -56,7 +56,7 @@ public class Producto {
         this.stock = stock;
         this.ubicacion = ubicacion;
         this.cantPersonas = cantPersonas;
-        this.categoriaId = categoriaId;
+        this.categoria = categoria;
     }
 
     //@ManyToOne

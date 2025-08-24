@@ -61,7 +61,7 @@ public class ProductoController {
     public ResponseEntity<Object> createProdcuto(@RequestBody ProductoRequest ProductoRequest)
             throws CategoriaDuplicadaException {
         // Crea una nueva categoría
-        Producto resultado = productoService.createProducto(ProductoRequest.getNombre(),ProductoRequest.getDescripcion(),ProductoRequest.getImagenUrl(),ProductoRequest.getPrecio(),ProductoRequest.getEstado(),ProductoRequest.getStock(),ProductoRequest.getUbicacion(),ProductoRequest.getCantPersonas(),ProductoRequest.getCategoriaId()); 
+        Producto resultado = productoService.createProducto(ProductoRequest.getNombre(),ProductoRequest.getDescripcion(),ProductoRequest.getImagenUrl(),ProductoRequest.getPrecio(),ProductoRequest.getEstado(),ProductoRequest.getStock(),ProductoRequest.getUbicacion(),ProductoRequest.getCantPersonas(),ProductoRequest.getCategoria()); 
         return ResponseEntity.created(URI.create("/productos/" + resultado.getId())).body(resultado); // Retorna 201 Created con la ubicación de la nueva categoría
     }
         

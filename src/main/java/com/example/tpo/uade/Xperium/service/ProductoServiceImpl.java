@@ -33,11 +33,11 @@ public class ProductoServiceImpl implements ProductoService {
         return productoRepository.findById(id);
     }
     
-    public Producto createProducto(String nombre, String descripcion, String imagenUrl, double precio, String estado, int stock, String ubicacion, int cantPersonas,Categoria categoriaId) throws CategoriaDuplicadaException {
+    public Producto createProducto(String nombre, String descripcion, String imagenUrl, double precio, String estado, int stock, String ubicacion, int cantPersonas,Categoria categoria) throws CategoriaDuplicadaException {
             List<Producto> productos = productoRepository.findByNombre(nombre);
             if (productos.isEmpty()) {
                 return productoRepository.save(new Producto(nombre,descripcion,imagenUrl,precio,estado
-                ,stock,ubicacion,cantPersonas,categoriaId));           
+                ,stock,ubicacion,cantPersonas,categoria));           
             }
             throw new CategoriaDuplicadaException();
     } 

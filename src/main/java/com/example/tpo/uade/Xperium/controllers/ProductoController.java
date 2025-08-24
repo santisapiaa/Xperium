@@ -35,6 +35,8 @@ public class ProductoController {
 
     @Autowired
     private ProductoService productoService;
+    @Autowired
+    private CategoriaRepository categoriaRepository;
 
     @GetMapping
     public ResponseEntity<Page<Producto>> getProducto(
@@ -57,12 +59,34 @@ public class ProductoController {
         }
     }
 
-    @PostMapping
-    public ResponseEntity<Object> createProdcuto(@RequestBody ProductoRequest ProductoRequest)
+    /*@PostMapping
+    public ResponseEntity<Object> createProducto(@RequestBody ProductoRequest ProductoRequest)
             throws CategoriaDuplicadaException {
         // Crea una nueva categoría
         Producto resultado = productoService.createProducto(ProductoRequest.getNombre(),ProductoRequest.getDescripcion(),ProductoRequest.getImagenUrl(),ProductoRequest.getPrecio(),ProductoRequest.getEstado(),ProductoRequest.getStock(),ProductoRequest.getUbicacion(),ProductoRequest.getCantPersonas(),ProductoRequest.getCategoria()); 
         return ResponseEntity.created(URI.create("/productos/" + resultado.getId())).body(resultado); // Retorna 201 Created con la ubicación de la nueva categoría
+    }*/
+
+    @PostMapping
+        public ResponseEntity<Object> createProducto(@RequestBody ProductoRequest productoRequest)
+            throws CategoriaDuplicadaException {
+        // Se crea una categoria que puede ser nula o no, si la id existe en la base de datos se asigna, sino se retorna un bad request
+        Optional<Categoria> categoriaOpt = categoriaRepository.findById(productoRequest.getCategoriaId()); 
+        if (categoriaOpt.isEmpty()) {
+            return ResponseEntity.badRequest().body("Categoría no encontrada");
+        }
+        Producto resultado = productoService.createProducto(
+            productoRequest.getNombre(),
+            productoRequest.getDescripcion(),
+            productoRequest.getImagenUrl(),
+            productoRequest.getPrecio(),
+            productoRequest.getEstado(),
+            productoRequest.getStock(),
+            productoRequest.getUbicacion(),
+            productoRequest.getCantPersonas(),
+            categoriaOpt.get()
+        );
+        return ResponseEntity.created(URI.create("/productos/" + resultado.getId())).body(resultado);
     }
         
 }

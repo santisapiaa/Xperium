@@ -1,4 +1,3 @@
-/* 
 package com.example.tpo.uade.Xperium.entity;
 
 import java.util.List;
@@ -14,6 +13,7 @@ import lombok.Data;
 @Data
 @Entity
 public class Proveedor {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,7 +27,13 @@ public class Proveedor {
     @Column
     private String contrasenia;
 
-    @OneToMany(mappedBy = "proveedor")
-    private List<Producto> productos;
+    public Proveedor(String nombre, String email, String telefono, String contrasenia) {
+        this.nombre = nombre;
+        this.email = email;
+        this.telefono = telefono;
+        this.contrasenia = contrasenia;
+    }
+
+    public Proveedor() {
+    }
 }
-*/

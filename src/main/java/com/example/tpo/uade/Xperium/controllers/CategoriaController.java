@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.tpo.uade.Xperium.entity.Categoria;
 import com.example.tpo.uade.Xperium.entity.dto.CategoriaRequest;
 import com.example.tpo.uade.Xperium.exceptions.CategoriaDuplicadaException;
-import com.example.tpo.uade.Xperium.service.CategoriaService;
+import com.example.tpo.uade.Xperium.service.Categoria.CategoriaService;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,8 +30,6 @@ public class CategoriaController {
     @Autowired
     private CategoriaService categoriaService;
 
-
-
     // Endpoint para obtener todas las categorias con paginación
     @GetMapping
     public ResponseEntity<Page<Categoria>> getCategorias(  
@@ -43,7 +41,6 @@ public class CategoriaController {
         }
         return ResponseEntity.ok(categoriaService.getCategorias(PageRequest.of(page, size))); // Retorna las categorías con paginación
     }
-    
 
     @GetMapping("/{categoriaId}")
     public ResponseEntity<Categoria> getCategoriaById(@PathVariable Long categoriaId) {
@@ -52,9 +49,7 @@ public class CategoriaController {
             return ResponseEntity.ok(resultado.get()); // Retorna la categoría encontrada
         } else {
             return ResponseEntity.notFound().build(); // Retorna 404 si no se encuentra la categoría
-            
         }
-
     }
 
      @PostMapping
@@ -64,7 +59,4 @@ public class CategoriaController {
         Categoria resultado = categoriaService.createCategoria(categoriaRequest.getDescripcion(), categoriaRequest.getImagenUrl()); 
         return ResponseEntity.created(URI.create("/categorias/" + resultado.getId())).body(resultado); // Retorna 201 Created con la ubicación de la nueva categoría
     }
-    
-    
-    
 }

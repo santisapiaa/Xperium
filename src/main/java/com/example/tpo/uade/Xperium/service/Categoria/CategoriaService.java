@@ -1,4 +1,4 @@
-package com.example.tpo.uade.Xperium.service;
+package com.example.tpo.uade.Xperium.service.Categoria;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Page;

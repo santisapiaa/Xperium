@@ -43,11 +43,15 @@ public class Producto {
     @JoinColumn(name = "categoriaId", referencedColumnName = "id",nullable = false)
     private Categoria categoria;
 
+    @ManyToOne
+    @JoinColumn(name = "proveedorId", nullable = false)
+    private Proveedor proveedor;
+    
     public Producto() {
     }
 
     public Producto(String nombre, String descripcion, String imagenUrl, double precio, String estado,
-            int stock, String ubicacion, int cantPersonas, Categoria categoria) {
+            int stock, String ubicacion, int cantPersonas, Categoria categoria, Proveedor proveedor) {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.imagenUrl = imagenUrl;
@@ -57,11 +61,8 @@ public class Producto {
         this.ubicacion = ubicacion;
         this.cantPersonas = cantPersonas;
         this.categoria = categoria;
+        this.proveedor = proveedor;
     }
-
-    //@ManyToOne
-    //@JoinColumn(name = "vendedorId", nullable = false)
-    //private Proveedor vendedor;
 
     //@OneToMany(mappedBy = "producto")
     //private List<DetalleOrdenDeCompra> detalleOrdenDeCompra;

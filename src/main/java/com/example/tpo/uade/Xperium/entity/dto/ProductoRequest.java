@@ -25,4 +25,7 @@ public class ProductoRequest {
     private int cantPersonas;
 
     private Long categoriaId;
-}
+
+    private Long proveedorId;
+    
+    }

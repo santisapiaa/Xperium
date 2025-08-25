@@ -24,9 +24,6 @@ public class Categoria {
     @Column
     private String imagenUrl;
 
-    //@OneToMany(mappedBy = "categoriaId")
-    //private List<Producto> productos;
-
     public Categoria() {
     }
 

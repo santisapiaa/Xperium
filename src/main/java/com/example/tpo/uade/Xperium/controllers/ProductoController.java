@@ -14,11 +14,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.tpo.uade.Xperium.entity.Categoria;
 import com.example.tpo.uade.Xperium.entity.Producto;
+import com.example.tpo.uade.Xperium.entity.Proveedor;
 import com.example.tpo.uade.Xperium.entity.dto.CategoriaRequest;
 import com.example.tpo.uade.Xperium.entity.dto.ProductoRequest;
 import com.example.tpo.uade.Xperium.exceptions.CategoriaDuplicadaException;
 import com.example.tpo.uade.Xperium.repository.CategoriaRepository;
-import com.example.tpo.uade.Xperium.service.ProductoService;
+import com.example.tpo.uade.Xperium.repository.ProveedorRepository;
+import com.example.tpo.uade.Xperium.service.Producto.ProductoService;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,6 +39,8 @@ public class ProductoController {
     private ProductoService productoService;
     @Autowired
     private CategoriaRepository categoriaRepository;
+    @Autowired
+    private ProveedorRepository proveedorRepository;
 
     @GetMapping
     public ResponseEntity<Page<Producto>> getProducto(
@@ -49,6 +53,7 @@ public class ProductoController {
         return ResponseEntity.ok(productoService.getProducto(PageRequest.of(page, size)));
 
         }
+
     @GetMapping("/{productoId}")
     public ResponseEntity<Producto> getProductoById(@PathVariable Long productoId) {
         Optional<Producto> resultado = productoService.getProductoById(productoId);
@@ -59,18 +64,11 @@ public class ProductoController {
         }
     }
 
-    /*@PostMapping
-    public ResponseEntity<Object> createProducto(@RequestBody ProductoRequest ProductoRequest)
-            throws CategoriaDuplicadaException {
-        // Crea una nueva categoría
-        Producto resultado = productoService.createProducto(ProductoRequest.getNombre(),ProductoRequest.getDescripcion(),ProductoRequest.getImagenUrl(),ProductoRequest.getPrecio(),ProductoRequest.getEstado(),ProductoRequest.getStock(),ProductoRequest.getUbicacion(),ProductoRequest.getCantPersonas(),ProductoRequest.getCategoria()); 
-        return ResponseEntity.created(URI.create("/productos/" + resultado.getId())).body(resultado); // Retorna 201 Created con la ubicación de la nueva categoría
-    }*/
-
     @PostMapping
         public ResponseEntity<Object> createProducto(@RequestBody ProductoRequest productoRequest)
             throws CategoriaDuplicadaException {
         // Se crea una categoria que puede ser nula o no, si la id existe en la base de datos se asigna, sino se retorna un bad request
+        Optional<Proveedor> provedorOpt = proveedorRepository.findById(productoRequest.getProveedorId());
         Optional<Categoria> categoriaOpt = categoriaRepository.findById(productoRequest.getCategoriaId()); 
         if (categoriaOpt.isEmpty()) {
             return ResponseEntity.badRequest().body("Categoría no encontrada");
@@ -84,9 +82,9 @@ public class ProductoController {
             productoRequest.getStock(),
             productoRequest.getUbicacion(),
             productoRequest.getCantPersonas(),
-            categoriaOpt.get()
+            categoriaOpt.get(),
+            provedorOpt.get()
         );
         return ResponseEntity.created(URI.create("/productos/" + resultado.getId())).body(resultado);
     }
-        
 }

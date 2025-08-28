@@ -1,4 +1,3 @@
-/* 
 package com.example.tpo.uade.Xperium.entity;
 
 import jakarta.persistence.Column;
@@ -26,8 +25,13 @@ public class Direccion {
     @Column
     private String codigoPostal;
 
-    @ManyToOne
-    @JoinColumn(name = "userId" , nullable = false)
-    private Comprador comprador;
+    public Direccion() {
+    }
+
+    public Direccion(String calle, String numero, String departamento, String codigoPostal) {
+        this.calle = calle;
+        this.numero = numero;
+        this.departamento = departamento;
+        this.codigoPostal = codigoPostal;
+    }
 }
-*/

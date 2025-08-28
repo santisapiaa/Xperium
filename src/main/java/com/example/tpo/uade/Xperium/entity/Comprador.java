@@ -1,4 +1,3 @@
-/*
 package com.example.tpo.uade.Xperium.entity;
 
 import java.util.List;
@@ -32,7 +31,19 @@ public class Comprador {
     @OneToMany(mappedBy = "compradorId")
     private Direccion direccion;
 
-    @OneToMany(mappedBy = "compradorId")
-    private List<OrdenDeCompra> ordenesDeCompra;
+    public Comprador() {
+    }
+
+    public Comprador(String nombre, String apellido, String email, String telefono, String contraseña,
+            Direccion direccion) {
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.email = email;
+        this.telefono = telefono;
+        this.contraseña = contraseña;
+        this.direccion = direccion;
+    }
+
+    //@OneToMany(mappedBy = "compradorId")
+    //private List<OrdenDeCompra> ordenesDeCompra;
 }
- */

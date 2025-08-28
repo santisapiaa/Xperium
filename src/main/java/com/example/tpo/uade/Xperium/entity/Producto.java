@@ -46,6 +46,9 @@ public class Producto {
     @ManyToOne
     @JoinColumn(name = "proveedorId", nullable = false)
     private Proveedor proveedor;
+
+    //@OneToMany(mappedBy = "producto")
+    //private List<DetalleOrdenDeCompra> detalleOrdenDeCompra;
     
     public Producto() {
     }
@@ -63,7 +66,4 @@ public class Producto {
         this.categoria = categoria;
         this.proveedor = proveedor;
     }
-
-    //@OneToMany(mappedBy = "producto")
-    //private List<DetalleOrdenDeCompra> detalleOrdenDeCompra;
 }

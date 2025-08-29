@@ -15,7 +15,7 @@ public interface DireccionService {
 
     public Optional<Direccion> getDireccionesById(Long id);
 
-    public Direccion createDireccion(String calle, String numero, String departamento, String codigoPostal);
+    public Direccion createDireccion(String calle, String numero, String departamento, String codigoPostal,Comprador comprador) throws CategoriaDuplicadaException;
 
     public void deleteDireccion(Long id);
 }

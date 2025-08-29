@@ -27,10 +27,10 @@ public class DireccionServiceImpl implements DireccionService {
        return direccionRepository.findById(id);
     }
    
-    public Direccion createDireccion(String calle, String numero, String departamento, String codigoPostal){
+    public Direccion createDireccion(String calle, String numero, String departamento, String codigoPostal,Comprador comprador) throws CategoriaDuplicadaException {
         //List<Direccion> direcciones = direccionRepository.findById();
         //if (direcciones.isEmpty()) {
-        return direccionRepository.save(new Direccion(calle, numero, departamento, codigoPostal)); //Guardo y retorno la nueva categoria
+        return direccionRepository.save(new Direccion(calle, numero, departamento, codigoPostal,comprador)); //Guardo y retorno la nueva categoria
         //}
         //throw new CategoriaDuplicadaException(); //Falta ver que hacer si ya existe la categoria
     }

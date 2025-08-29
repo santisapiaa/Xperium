@@ -28,10 +28,10 @@ public class CompradorServiceImpl implements CompradorService{
        return compradorRepository.findById(id);
     }
    
-    public Comprador createComprador(String nombre, String apellido, String email, String telefono, String contraseña, Direccion direccion) throws CategoriaDuplicadaException {
+    public Comprador createComprador(String nombre, String apellido, String email, String telefono, String contraseña) throws CategoriaDuplicadaException {
         List<Comprador> compradores = compradorRepository.findByEmail(email);
         if (compradores.isEmpty()) {
-            return compradorRepository.save(new Comprador(nombre, apellido, email, telefono, contraseña, direccion)); //Guardo y retorno la nueva categoria
+            return compradorRepository.save(new Comprador(nombre, apellido, email, telefono, contraseña)); //Guardo y retorno la nueva categoria
         }
         throw new CategoriaDuplicadaException(); //Falta ver que hacer si ya existe la categoria
     }

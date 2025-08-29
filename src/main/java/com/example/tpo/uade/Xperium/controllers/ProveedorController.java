@@ -15,12 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.tpo.uade.Xperium.entity.Categoria;
 import com.example.tpo.uade.Xperium.entity.Proveedor;
-import com.example.tpo.uade.Xperium.entity.dto.CategoriaRequest;
 import com.example.tpo.uade.Xperium.entity.dto.ProveedorRequest;
 import com.example.tpo.uade.Xperium.exceptions.CategoriaDuplicadaException;
-import com.example.tpo.uade.Xperium.service.Categoria.CategoriaService;
 import com.example.tpo.uade.Xperium.service.Proveedor.ProveedorService;
 
 @RestController

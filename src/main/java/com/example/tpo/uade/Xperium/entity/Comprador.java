@@ -28,20 +28,15 @@ public class Comprador {
     @Column
     private String contraseña;
 
-    @OneToMany(mappedBy = "compradorId")
-    private Direccion direccion;
-
     public Comprador() {
     }
 
-    public Comprador(String nombre, String apellido, String email, String telefono, String contraseña,
-            Direccion direccion) {
+    public Comprador(String nombre, String apellido, String email, String telefono, String contraseña) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.email = email;
         this.telefono = telefono;
         this.contraseña = contraseña;
-        this.direccion = direccion;
     }
 
     //@OneToMany(mappedBy = "compradorId")

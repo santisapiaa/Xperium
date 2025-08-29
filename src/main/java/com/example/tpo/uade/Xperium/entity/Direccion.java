@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import lombok.Data;
 
 @Data
@@ -25,13 +26,18 @@ public class Direccion {
     @Column
     private String codigoPostal;
 
+    @ManyToOne
+    @JoinColumn(name = "compradorId",referencedColumnName = "id", nullable = false)
+    private Comprador comprador;
+
     public Direccion() {
     }
 
-    public Direccion(String calle, String numero, String departamento, String codigoPostal) {
+    public Direccion(String calle, String numero, String departamento, String codigoPostal,Comprador comprador) {
         this.calle = calle;
         this.numero = numero;
         this.departamento = departamento;
         this.codigoPostal = codigoPostal;
+        this.comprador = comprador;
     }
 }

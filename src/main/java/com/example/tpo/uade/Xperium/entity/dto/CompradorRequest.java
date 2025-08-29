@@ -1,5 +1,9 @@
 package com.example.tpo.uade.Xperium.entity.dto;
 
+
+import lombok.Data;
+
+@Data
 public class CompradorRequest {
     private Long id;
 
@@ -13,5 +17,6 @@ public class CompradorRequest {
 
     private String contraseña;
 
-    private Long direccionId;
+
+
 }

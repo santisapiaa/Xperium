@@ -43,7 +43,7 @@ public class DireccionController {
     // Inyección de dependencia del servicio de categoría
     @Autowired
     private DireccionService direccionService;
-     @Autowired
+    @Autowired
     private DireccionRepository direccionRepository;
     @Autowired
     private CompradorRepository compradorRepository;

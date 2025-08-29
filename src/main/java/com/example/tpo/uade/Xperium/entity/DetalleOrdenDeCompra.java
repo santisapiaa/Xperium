@@ -1,4 +1,3 @@
-/* 
 package com.example.tpo.uade.Xperium.entity;
 
 import jakarta.persistence.Column;
@@ -29,5 +28,14 @@ public class DetalleOrdenDeCompra {
     @ManyToOne
     @JoinColumn(name = "ordenDeCompraId", nullable = false)
     private OrdenDeCompra ordenDeCompra;
+
+    public DetalleOrdenDeCompra() {
+    }
+
+    public DetalleOrdenDeCompra(int cantidad, double precioUnitario, Producto producto, OrdenDeCompra ordenDeCompra) {
+        this.cantidad = cantidad;
+        this.precioUnitario = precioUnitario;
+        this.producto = producto;
+        this.ordenDeCompra = ordenDeCompra;
+    }
 }
-*/

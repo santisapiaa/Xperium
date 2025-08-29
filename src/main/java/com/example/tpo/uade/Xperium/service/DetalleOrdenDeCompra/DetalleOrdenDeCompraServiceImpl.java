@@ -1,0 +1,44 @@
+package com.example.tpo.uade.Xperium.service.DetalleOrdenDeCompra;
+
+import java.time.LocalDate;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
+
+import com.example.tpo.uade.Xperium.entity.Comprador;
+import com.example.tpo.uade.Xperium.entity.DetalleOrdenDeCompra;
+import com.example.tpo.uade.Xperium.entity.OrdenDeCompra;
+import com.example.tpo.uade.Xperium.entity.Producto;
+import com.example.tpo.uade.Xperium.exceptions.CategoriaDuplicadaException;
+import com.example.tpo.uade.Xperium.repository.DetalleOrdenDeCompraRepository;
+import com.example.tpo.uade.Xperium.repository.OrdenDeCompraRepository;
+
+@Service
+public class DetalleOrdenDeCompraServiceImpl implements DetalleOrdenDeCompraService{
+
+    @Autowired
+    private DetalleOrdenDeCompraRepository detalleOrdenDeCompraRepository;
+
+    public Page<DetalleOrdenDeCompra> getDetallesOrdenDeCompra(PageRequest pageRequest) {
+        return detalleOrdenDeCompraRepository.findAll(pageRequest);
+    }
+
+    public Optional<DetalleOrdenDeCompra> getDetallesOrdenDeCompraById(Long id) {
+        return detalleOrdenDeCompraRepository.findById(id);
+    }
+
+    public DetalleOrdenDeCompra createDetalleOrdenDeCompra(int cantidad, double precioUnitario, Producto producto, OrdenDeCompra ordenDeCompra) throws CategoriaDuplicadaException{
+        //List<OrdenDeCompra> ordenDeCompras = ordenDeCompraRepository.findBy();
+        //if (ordenDeCompras.isEmpty()) {
+            return detalleOrdenDeCompraRepository.save(new DetalleOrdenDeCompra(cantidad, precioUnitario, producto, ordenDeCompra)); //Guardo y retorno la nueva categoria
+        //}
+        //throw new CategoriaDuplicadaException(); //Falta ver que hacer si ya existe la categoria
+    }
+
+    public void deleteDetalleOrdenDeCompra(Long id) {
+        detalleOrdenDeCompraRepository.deleteById(id);
+    }
+}

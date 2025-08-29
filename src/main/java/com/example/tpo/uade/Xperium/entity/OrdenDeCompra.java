@@ -1,4 +1,3 @@
-/* 
 package com.example.tpo.uade.Xperium.entity;
 
 import java.time.LocalDate;
@@ -32,8 +31,17 @@ public class OrdenDeCompra {
     @JoinColumn(name = "compradorId", nullable = false)
     private Comprador comprador;
 
-    @OneToMany(mappedBy = "detalleOrdenDeCompraId")
-    private List<DetalleOrdenDeCompra> detalleOrdenDeCompra;
+    //@OneToMany(mappedBy = "detalleOrdenDeCompraId")
+    //private List<DetalleOrdenDeCompra> detalleOrdenDeCompra;
 
+    public OrdenDeCompra() {
+    }
+
+    public OrdenDeCompra(LocalDate fecha, double total, String estado, Comprador comprador /*, List<DetalleOrdenDeCompra> detalleOrdenDeCompra*/) {
+        this.fecha = fecha;
+        this.total = total;
+        this.estado = estado;
+        this.comprador = comprador;
+        //this.detalleOrdenDeCompra = detalleOrdenDeCompra;
+    }
 }
-*/

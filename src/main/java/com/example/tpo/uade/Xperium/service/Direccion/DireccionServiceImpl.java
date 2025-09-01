@@ -38,4 +38,14 @@ public class DireccionServiceImpl implements DireccionService {
     public void deleteDireccion(Long id) {
         direccionRepository.deleteById(id);
     }
+
+    public Direccion updateDireccion(Long id, String calle, String numero, String departamento, String codigoPostal) throws Exception {
+        Direccion direccion = direccionRepository.findById(id)
+            .orElseThrow(() -> new Exception("Direccion no encontrada"));
+        direccion.setCalle(calle);
+        direccion.setNumero(numero);
+        direccion.setDepartamento(departamento);
+        direccion.setCodigoPostal(codigoPostal);
+        return direccionRepository.save(direccion);
+    }
 }

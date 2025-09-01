@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -57,5 +58,23 @@ public class ProveedorController {
         // Crea una nueva categoría
         Proveedor resultado = proveedorService.createProveedor(proveedorRequest.getNombre(), proveedorRequest.getEmail(), proveedorRequest.getTelefono(), proveedorRequest.getContrasenia()); 
         return ResponseEntity.created(URI.create("/proveedores/" + resultado.getId())).body(resultado); // Retorna 201 Created con la ubicación de la nueva categoría
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Proveedor> updateProveedor(
+            @PathVariable Long id,
+            @RequestBody ProveedorRequest proveedorRequest) {
+        try {
+            Proveedor updated = proveedorService.updateProveedor(
+                id,
+                proveedorRequest.getNombre(),
+                proveedorRequest.getEmail(),
+                proveedorRequest.getTelefono(),
+                proveedorRequest.getContrasenia()
+            );
+            return ResponseEntity.ok(updated);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

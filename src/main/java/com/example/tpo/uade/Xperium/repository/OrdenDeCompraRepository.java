@@ -12,7 +12,7 @@ import com.example.tpo.uade.Xperium.entity.OrdenDeCompra;
 public interface OrdenDeCompraRepository extends JpaRepository<OrdenDeCompra, Long>{
 
     @Query(value = "select o from OrdenDeCompra o where o.id = ?1 ")
-    Optional findById(Long id);
+    Optional<OrdenDeCompra> findById(Long id);
 
     @Query(value = "select o from OrdenDeCompra o where o.fecha = ?1")
     List<OrdenDeCompra> findByFecha(LocalDate fecha);

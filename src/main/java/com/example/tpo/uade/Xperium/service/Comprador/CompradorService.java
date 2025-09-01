@@ -17,4 +17,7 @@ public interface CompradorService {
     public Comprador createComprador(String nombre, String apellido, String email, String telefono, String contraseña) throws CategoriaDuplicadaException;
 
     public void deleteComprador(Long id);
+
+    public Comprador updateComprador(Long id, String nombre, String apellido, String email, String telefono, String contraseña) throws Exception;
+
 }

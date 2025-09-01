@@ -19,4 +19,7 @@ public interface ProductoService {
     public Producto createProducto(String nombre, String descripcion, String imagenUrl, double precio, String estado, int stock, String ubicacion, int cantPersonas,Categoria categoria, Proveedor proveedor) throws CategoriaDuplicadaException;
     
     public void deleteProducto(Long id);
+
+    public Producto updateProducto(Long id, String nombre, String descripcion, String imagenUrl, double precio, String estado, int stock, String ubicacion, int cantPersonas, Categoria categoria) throws Exception;
+
 }

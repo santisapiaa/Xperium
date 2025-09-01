@@ -18,4 +18,7 @@ public interface CategoriaService {
 
     public void deleteCategoria(Long id);
 
+    public Categoria updateCategoria(Long id, String descripcion, String imagenUrl) throws Exception;
+
+
 }

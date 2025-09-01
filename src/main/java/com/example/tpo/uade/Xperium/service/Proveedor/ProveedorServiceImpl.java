@@ -41,5 +41,16 @@ public class ProveedorServiceImpl implements ProveedorService {
     public void deleteProveedor(Long id) {
         proveedorRepository.deleteById(id);
     }
+
+    public Proveedor updateProveedor(Long id, String nombre, String email, String telefono, String contrasenia) throws Exception {
+        Proveedor proveedor = proveedorRepository.findById(id)
+            .orElseThrow(() -> new Exception("Proveedor no encontrado"));
+        proveedor.setNombre(nombre);
+        proveedor.setEmail(email);
+        proveedor.setTelefono(telefono);
+        proveedor.setContrasenia(contrasenia);
+        return proveedorRepository.save(proveedor);
+    }
+
     
 }

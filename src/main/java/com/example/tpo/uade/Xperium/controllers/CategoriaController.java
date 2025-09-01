@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.http.ResponseEntity;
 
@@ -59,4 +60,20 @@ public class CategoriaController {
         Categoria resultado = categoriaService.createCategoria(categoriaRequest.getDescripcion(), categoriaRequest.getImagenUrl()); 
         return ResponseEntity.created(URI.create("/categorias/" + resultado.getId())).body(resultado); // Retorna 201 Created con la ubicación de la nueva categoría
     }
+
+    @PutMapping("/{id}")
+        public ResponseEntity<Categoria> updateCategoria(
+                @PathVariable Long id,
+                @RequestBody CategoriaRequest categoriaRequest) {
+            try {
+                Categoria updated = categoriaService.updateCategoria(
+                    id,
+                    categoriaRequest.getDescripcion(),
+                    categoriaRequest.getImagenUrl()
+                );
+                return ResponseEntity.ok(updated);
+            } catch (Exception e) {
+                return ResponseEntity.notFound().build();
+            }
+        }
 }

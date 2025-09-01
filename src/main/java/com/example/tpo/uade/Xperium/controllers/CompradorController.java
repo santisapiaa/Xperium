@@ -10,14 +10,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-
+import com.example.tpo.uade.Xperium.entity.Categoria;
 import com.example.tpo.uade.Xperium.entity.Comprador;
-
+import com.example.tpo.uade.Xperium.entity.dto.CategoriaRequest;
 import com.example.tpo.uade.Xperium.entity.dto.CompradorRequest;
 import com.example.tpo.uade.Xperium.exceptions.CategoriaDuplicadaException;
 
@@ -69,4 +70,25 @@ public class CompradorController {
          compradorRequest.getTelefono(), compradorRequest.getContraseña());
         return ResponseEntity.created(URI.create("/compradores/" + resultado.getId())).body(resultado); // Retorna 201 Created con la ubicación del nuevo comprador
     }
+
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Comprador> updateComprador(
+            @PathVariable Long id,
+            @RequestBody CompradorRequest compradorRequest) {
+        try {
+            Comprador updated = compradorService.updateComprador(
+                id,
+                compradorRequest.getNombre(),
+                compradorRequest.getApellido(),
+                compradorRequest.getEmail(),
+                compradorRequest.getTelefono(),
+                compradorRequest.getContraseña()
+            );
+            return ResponseEntity.ok(updated);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    
 }

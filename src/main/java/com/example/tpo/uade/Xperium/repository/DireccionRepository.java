@@ -13,7 +13,7 @@ import com.example.tpo.uade.Xperium.entity.Direccion;
 public interface DireccionRepository extends JpaRepository<Direccion, Long>  {
 
     @Query(value = "select p from Producto p where p.id = ?1 ")
-    Optional findById(Long id);
+    Optional<Direccion> findById(Long id);
 
     @Query(value = "select p from Producto p where p.nombre = ?1")
     List<Direccion> findByNombre(String nombre);

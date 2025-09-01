@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 public interface ProveedorRepository extends JpaRepository<Proveedor, Long> {
     
     @Query(value = "select p from Proveedor p where p.id = ?1 ")
-    Optional findById(Long id);
+    Optional<Proveedor> findById(Long id);
 
     @Query(value = "select p from Proveedor p where p.nombre = ?1")
     List<Proveedor> findByNombre(String nombre);

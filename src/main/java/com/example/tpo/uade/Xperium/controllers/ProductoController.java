@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -87,4 +88,31 @@ public class ProductoController {
         );
         return ResponseEntity.created(URI.create("/productos/" + resultado.getId())).body(resultado);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Producto> updateProducto(
+            @PathVariable Long id,
+            @RequestBody ProductoRequest productoRequest) {
+            Optional<Categoria> categoriaOpt = categoriaRepository.findById(productoRequest.getCategoriaId()); 
+
+        try {
+            Producto updated = productoService.updateProducto(
+                id,
+                productoRequest.getNombre(),
+                productoRequest.getDescripcion(),
+                productoRequest.getImagenUrl(),
+                productoRequest.getPrecio(),
+                productoRequest.getEstado(),
+                productoRequest.getStock(),
+                productoRequest.getUbicacion(),
+                productoRequest.getCantPersonas(),
+                categoriaOpt.get() 
+            );
+            return ResponseEntity.ok(updated);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
 }

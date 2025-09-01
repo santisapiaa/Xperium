@@ -39,4 +39,15 @@ public class CompradorServiceImpl implements CompradorService{
     public void deleteComprador(Long id) {
         compradorRepository.deleteById(id);
     }
+
+    public Comprador updateComprador(Long id, String nombre, String apellido, String email, String telefono, String contraseña) throws Exception {
+        Comprador comprador = compradorRepository.findById(id)
+            .orElseThrow(() -> new Exception("Comprador no encontrado"));
+        comprador.setNombre(nombre);
+        comprador.setApellido(apellido);
+        comprador.setEmail(email);
+        comprador.setTelefono(telefono);
+        comprador.setContraseña(contraseña);
+        return compradorRepository.save(comprador);
+    }
 }

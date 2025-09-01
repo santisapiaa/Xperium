@@ -18,5 +18,8 @@ public interface ProveedorService {
     public Proveedor createProveedor(String nombre, String email, String telefono, String contrasenia) throws CategoriaDuplicadaException;
     
     public void deleteProveedor(Long id);
+
+    public Proveedor updateProveedor(Long id, String nombre, String email, String telefono, String contrasenia) throws Exception;
+
   
 }

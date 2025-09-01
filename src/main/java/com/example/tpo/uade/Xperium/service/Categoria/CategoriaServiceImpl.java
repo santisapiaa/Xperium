@@ -38,6 +38,11 @@ public class CategoriaServiceImpl  implements CategoriaService {
         categoriaRepository.deleteById(id);
     }
 
-    //Falta implementar el metodo de actualizar categoria
-
+    
+    public Categoria updateCategoria(Long id, String descripcion, String imagenUrl) throws Exception {
+        Categoria categoriaOpt = categoriaRepository.findById(id).orElseThrow(() -> new Exception("Categoria no encontrada"));
+        categoriaOpt.setDescripcion(descripcion);
+        categoriaOpt.setImagenUrl(imagenUrl);
+        return categoriaRepository.save(categoriaOpt);
+    }
 }

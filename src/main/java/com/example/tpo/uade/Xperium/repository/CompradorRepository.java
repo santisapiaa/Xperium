@@ -13,7 +13,7 @@ import com.example.tpo.uade.Xperium.entity.Comprador;
 public interface CompradorRepository extends JpaRepository<Comprador, Long>{
 
     @Query(value = "select c from Comprador c where c.id = ?1 ")
-    Optional findById(Long id);
+    Optional<Comprador> findById(Long id);
 
     @Query(value = "select c from Comprador c where c.email = ?1")
     List<Comprador> findByEmail(String email);

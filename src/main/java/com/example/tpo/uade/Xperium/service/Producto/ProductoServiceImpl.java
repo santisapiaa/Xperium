@@ -45,4 +45,19 @@ public class ProductoServiceImpl implements ProductoService {
     public void deleteProducto(Long id) {
         productoRepository.deleteById(id);
     }
+
+    public Producto updateProducto(Long id, String nombre, String descripcion, String imagenUrl, double precio, String estado, int stock, String ubicacion, int cantPersonas, Categoria categoria) throws Exception {
+        Producto producto = productoRepository.findById(id)
+            .orElseThrow(() -> new Exception("Producto no encontrado"));
+        producto.setNombre(nombre);
+        producto.setDescripcion(descripcion);
+        producto.setImagenUrl(imagenUrl);
+        producto.setPrecio(precio);
+        producto.setEstado(estado);
+        producto.setStock(stock);
+        producto.setUbicacion(ubicacion);
+        producto.setCantPersonas(cantPersonas);
+        producto.setCategoria(categoria);
+        return productoRepository.save(producto);
+    }
 }

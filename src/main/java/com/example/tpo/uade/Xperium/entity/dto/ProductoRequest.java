@@ -27,5 +27,4 @@ public class ProductoRequest {
     private Long categoriaId;
 
     private Long proveedorId;
-    
-    }
+}

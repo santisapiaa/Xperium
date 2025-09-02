@@ -53,7 +53,7 @@ public class CategoriaController {
         }
     }
 
-     @PostMapping
+    @PostMapping
     public ResponseEntity<Object> createCategoria(@RequestBody CategoriaRequest categoriaRequest)
             throws CategoriaDuplicadaException {
         // Crea una nueva categoría
@@ -62,18 +62,18 @@ public class CategoriaController {
     }
 
     @PutMapping("/{id}")
-        public ResponseEntity<Categoria> updateCategoria(
-                @PathVariable Long id,
-                @RequestBody CategoriaRequest categoriaRequest) {
-            try {
-                Categoria updated = categoriaService.updateCategoria(
-                    id,
-                    categoriaRequest.getDescripcion(),
-                    categoriaRequest.getImagenUrl()
-                );
-                return ResponseEntity.ok(updated);
-            } catch (Exception e) {
-                return ResponseEntity.notFound().build();
-            }
+    public ResponseEntity<Categoria> updateCategoria(
+            @PathVariable Long id,
+            @RequestBody CategoriaRequest categoriaRequest) {
+        try {
+            Categoria updated = categoriaService.updateCategoria(
+                id,
+                categoriaRequest.getDescripcion(),
+                categoriaRequest.getImagenUrl()
+            );
+            return ResponseEntity.ok(updated);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
         }
+    }
 }

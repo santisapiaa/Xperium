@@ -113,6 +113,4 @@ public class ProductoController {
             return ResponseEntity.notFound().build();
         }
     }
-
-
 }

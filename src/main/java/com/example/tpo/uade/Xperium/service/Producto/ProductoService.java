@@ -12,6 +12,7 @@ import com.example.tpo.uade.Xperium.entity.dto.ProductoRequest;
 import com.example.tpo.uade.Xperium.exceptions.CategoriaDuplicadaException;
 
 public interface ProductoService {
+    
     public Page<Producto> getProducto(PageRequest pageRequest);
 
     public Optional<Producto> getProductoById(Long id);

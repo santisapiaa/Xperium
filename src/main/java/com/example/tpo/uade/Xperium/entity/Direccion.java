@@ -13,6 +13,7 @@ import lombok.Data;
 @Data
 @Entity
 public class Direccion {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -40,4 +41,5 @@ public class Direccion {
         this.codigoPostal = codigoPostal;
         this.comprador = comprador;
     }
+    
 }

@@ -12,6 +12,7 @@ import lombok.Data;
 @Data
 @Entity
 public class DetalleOrdenDeCompra {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -38,4 +39,5 @@ public class DetalleOrdenDeCompra {
         this.producto = producto;
         this.ordenDeCompra = ordenDeCompra;
     }
+    
 }

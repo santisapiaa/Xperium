@@ -16,6 +16,7 @@ import lombok.Data;
 @Data
 @Entity
 public class OrdenDeCompra {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -44,4 +45,5 @@ public class OrdenDeCompra {
         this.comprador = comprador;
         //this.detalleOrdenDeCompra = detalleOrdenDeCompra;
     }
+    
 }

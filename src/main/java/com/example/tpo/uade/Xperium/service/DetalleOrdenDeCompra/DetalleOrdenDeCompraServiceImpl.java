@@ -41,4 +41,5 @@ public class DetalleOrdenDeCompraServiceImpl implements DetalleOrdenDeCompraServ
     public void deleteDetalleOrdenDeCompra(Long id) {
         detalleOrdenDeCompraRepository.deleteById(id);
     }
+    
 }

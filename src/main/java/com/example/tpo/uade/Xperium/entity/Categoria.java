@@ -31,4 +31,5 @@ public class Categoria {
         this.descripcion = descripcion;
         this.imagenUrl = imagenUrl;
     }
+    
 }

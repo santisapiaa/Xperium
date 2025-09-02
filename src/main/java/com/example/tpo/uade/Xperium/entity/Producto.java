@@ -66,4 +66,5 @@ public class Producto {
         this.categoria = categoria;
         this.proveedor = proveedor;
     }
+    
 }

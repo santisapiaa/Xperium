@@ -50,7 +50,5 @@ public class ProveedorServiceImpl implements ProveedorService {
         proveedor.setTelefono(telefono);
         proveedor.setContrasenia(contrasenia);
         return proveedorRepository.save(proveedor);
-    }
-
-    
+    }    
 }

@@ -7,7 +7,6 @@ import lombok.Data;
 
 @Data
 public class DetalleOrdenDeCompraRequest {
-
     private Long id;
 
     private int cantidad;

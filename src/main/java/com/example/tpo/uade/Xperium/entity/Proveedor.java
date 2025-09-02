@@ -36,4 +36,5 @@ public class Proveedor {
 
     public Proveedor() {
     }
+    
 }

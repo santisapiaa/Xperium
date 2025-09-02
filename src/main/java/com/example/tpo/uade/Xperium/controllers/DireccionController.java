@@ -71,7 +71,7 @@ public class DireccionController {
         }
     }
 
-     @PostMapping
+    @PostMapping
         public ResponseEntity<Object> createDireccion(@RequestBody DireccionRequest direccionRequest)
             throws CategoriaDuplicadaException {
         // Se crea una categoria que puede ser nula o no, si la id existe en la base de datos se asigna, sino se retorna un bad request

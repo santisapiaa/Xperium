@@ -20,5 +20,4 @@ public interface CategoriaService {
 
     public Categoria updateCategoria(Long id, String descripcion, String imagenUrl) throws Exception;
 
-
 }

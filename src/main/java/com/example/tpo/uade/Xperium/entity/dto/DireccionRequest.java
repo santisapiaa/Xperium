@@ -18,5 +18,4 @@ public class DireccionRequest {
     private String codigoPostal;
 
     private Long compradorId;
-
 }

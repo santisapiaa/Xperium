@@ -21,4 +21,5 @@ public interface OrdenDeCompraService {
     public OrdenDeCompra createOrdenDeCompra(LocalDate fecha, double total, String estado, Comprador comprador /* , List<DetalleOrdenDeCompra> detalleOrdenDeCompra*/) throws CategoriaDuplicadaException;
 
     public void deleteOrdenDeCompra(Long id);
+    
 }

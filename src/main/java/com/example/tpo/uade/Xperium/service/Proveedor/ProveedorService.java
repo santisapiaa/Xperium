@@ -11,6 +11,7 @@ import com.example.tpo.uade.Xperium.entity.Proveedor;
 import com.example.tpo.uade.Xperium.exceptions.CategoriaDuplicadaException;
 
 public interface ProveedorService {
+
     public Page<Proveedor> getProveedor(PageRequest pageRequest);
 
     public Optional<Proveedor> getProveedorById(Long id);
@@ -20,6 +21,5 @@ public interface ProveedorService {
     public void deleteProveedor(Long id);
 
     public Proveedor updateProveedor(Long id, String nombre, String email, String telefono, String contrasenia) throws Exception;
-
   
 }

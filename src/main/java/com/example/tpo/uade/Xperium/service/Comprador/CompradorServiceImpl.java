@@ -50,4 +50,5 @@ public class CompradorServiceImpl implements CompradorService{
         comprador.setContraseña(contraseña);
         return compradorRepository.save(comprador);
     }
+    
 }

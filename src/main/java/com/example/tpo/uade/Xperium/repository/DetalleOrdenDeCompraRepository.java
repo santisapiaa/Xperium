@@ -13,4 +13,5 @@ public interface DetalleOrdenDeCompraRepository extends JpaRepository<DetalleOrd
 
     @Query(value = "select o from DetalleOrdenDeCompra o where o.id = ?1 ")
     List<DetalleOrdenDeCompra> findByOrdenCompraId(Long ordenCompraId);
+    
 }

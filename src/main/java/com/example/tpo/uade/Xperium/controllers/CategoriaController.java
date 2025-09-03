@@ -13,6 +13,7 @@ import com.example.tpo.uade.Xperium.entity.dto.CategoriaRequest;
 import com.example.tpo.uade.Xperium.exceptions.CategoriaDuplicadaException;
 import com.example.tpo.uade.Xperium.service.Categoria.CategoriaService;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -74,6 +75,17 @@ public class CategoriaController {
             return ResponseEntity.ok(updated);
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCategoria(@PathVariable Long id) {
+        Optional<Categoria> categoria = categoriaService.getCategoriasById(id);
+        if (categoria.isPresent()) {
+            categoriaService.deleteCategoria(id);
+            return ResponseEntity.noContent().build(); // 204 No Content
+        } else {
+            return ResponseEntity.notFound().build(); // 404 Not Found
         }
     }
 }

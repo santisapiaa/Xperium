@@ -60,5 +60,16 @@ public class ProductoServiceImpl implements ProductoService {
         producto.setCategoria(categoria);
         return productoRepository.save(producto);
     }
-    
+
+    @Override
+    public Producto updateDescuento(Long id, int descuento) {
+        Optional<Producto> productoOpt = productoRepository.findById(id);
+        if (productoOpt.isPresent()) {
+            Producto producto = productoOpt.get();
+            producto.setDescuento(descuento);
+            producto.setPrecioConDescuento(producto.getPrecio());
+            return productoRepository.save(producto); // Usas el repository aquí
+        }
+        throw new RuntimeException("Producto no encontrado");
+    }
 }

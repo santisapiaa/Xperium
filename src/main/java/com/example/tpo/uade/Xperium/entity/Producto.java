@@ -38,6 +38,8 @@ public class Producto {
     private String ubicacion;
     @Column
     private int cantPersonas;
+    @Column
+    private int descuento = 0;
 
     @ManyToOne
     @JoinColumn(name = "categoriaId", referencedColumnName = "id",nullable = false)
@@ -66,5 +68,13 @@ public class Producto {
         this.categoria = categoria;
         this.proveedor = proveedor;
     }
-    
+
+    public void setPrecioConDescuento(double precioOriginal) {
+        if (descuento > 0 && descuento <= 100) {
+            this.precio = precioOriginal - (precioOriginal * descuento / 100.0);
+        
+        } else {
+            this.precio = precioOriginal;
+        }
+    }
 }

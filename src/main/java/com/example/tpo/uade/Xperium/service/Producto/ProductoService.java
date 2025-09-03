@@ -23,4 +23,5 @@ public interface ProductoService {
 
     public Producto updateProducto(Long id, String nombre, String descripcion, String imagenUrl, double precio, String estado, int stock, String ubicacion, int cantPersonas, Categoria categoria) throws Exception;
 
+    public Producto updateDescuento(Long id, int descuento);
 }

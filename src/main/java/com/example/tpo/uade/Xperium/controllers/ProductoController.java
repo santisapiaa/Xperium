@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.tpo.uade.Xperium.entity.Categoria;
+import com.example.tpo.uade.Xperium.entity.Direccion;
 import com.example.tpo.uade.Xperium.entity.Producto;
 import com.example.tpo.uade.Xperium.entity.Proveedor;
 import com.example.tpo.uade.Xperium.entity.dto.CategoriaRequest;
@@ -24,6 +25,7 @@ import com.example.tpo.uade.Xperium.service.Producto.ProductoService;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -106,11 +108,34 @@ public class ProductoController {
                 productoRequest.getStock(),
                 productoRequest.getUbicacion(),
                 productoRequest.getCantPersonas(),
-                categoriaOpt.get() 
+                categoriaOpt.get()
             );
             return ResponseEntity.ok(updated);
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PutMapping("/descuento/{id}")
+    public ResponseEntity<Producto> updateDescuento(
+            @PathVariable Long id,
+            @RequestBody ProductoRequest productoRequest) {
+        try {
+            Producto productoActualizado = productoService.updateDescuento(id, productoRequest.getDescuento());
+            return ResponseEntity.ok(productoActualizado);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteProducto(@PathVariable Long id) {
+        Optional<Producto> producto = productoService.getProductoById(id);
+        if (producto.isPresent()) {
+            productoService.deleteProducto(id);
+            return ResponseEntity.noContent().build(); // 204 No Content
+        } else {
+            return ResponseEntity.notFound().build(); // 404 Not Found
         }
     }
 }

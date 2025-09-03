@@ -1,6 +1,7 @@
 package com.example.tpo.uade.Xperium.controllers;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +19,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.tpo.uade.Xperium.entity.Categoria;
 import com.example.tpo.uade.Xperium.entity.Comprador;
+import com.example.tpo.uade.Xperium.entity.Direccion;
 import com.example.tpo.uade.Xperium.entity.dto.CategoriaRequest;
 import com.example.tpo.uade.Xperium.entity.dto.CompradorRequest;
 import com.example.tpo.uade.Xperium.exceptions.CategoriaDuplicadaException;
 
 import com.example.tpo.uade.Xperium.service.Comprador.CompradorService;
+import com.example.tpo.uade.Xperium.service.Direccion.DireccionService;
 
 @RestController
 @RequestMapping("compradores")
@@ -30,6 +33,9 @@ public class CompradorController {
     // Inyección de dependencia del servicio de categoría
     @Autowired
     private CompradorService compradorService;
+
+    @Autowired
+    private DireccionService direccionService;
 
     // Endpoint para obtener todas las categorias con paginación
     @GetMapping
@@ -53,14 +59,11 @@ public class CompradorController {
         }
     }
 
-    /*  @PostMapping
-    public ResponseEntity<Object> createComprador(@RequestBody CompradorRequest compradorRequest)
-            throws CategoriaDuplicadaException {
-        // Crea una nueva categoría
-        Comprador resultado = compradorRequest.createComprador(compradorRequest.getNombre(), compradorRequest.getApellido(), compradorRequest.getEmail(),
-         compradorRequest.getTelefono(), compradorRequest.getContraseña()); 
-        return ResponseEntity.created(URI.create("/compradores/" + resultado.getId())).body(resultado); // Retorna 201 Created con la ubicación de la nueva categoría
-    }*/
+    @GetMapping("/{compradorId}/direcciones")
+        public ResponseEntity<List<Direccion>> getDireccionesByComprador(@PathVariable Long compradorId) {
+            List<Direccion> direcciones = direccionService.getDireccionesByCompradorId(compradorId);
+            return ResponseEntity.ok(direcciones);
+    }
 
     @PostMapping
     public ResponseEntity<Object> createComprador(@RequestBody CompradorRequest compradorRequest)

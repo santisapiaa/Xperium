@@ -1,5 +1,7 @@
 package com.example.tpo.uade.Xperium.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -29,6 +31,7 @@ public class Direccion {
 
     @ManyToOne
     @JoinColumn(name = "compradorId",referencedColumnName = "id", nullable = false)
+    @JsonBackReference
     private Comprador comprador;
 
     public Direccion() {

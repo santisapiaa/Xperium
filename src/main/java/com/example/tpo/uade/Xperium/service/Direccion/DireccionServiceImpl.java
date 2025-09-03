@@ -28,11 +28,7 @@ public class DireccionServiceImpl implements DireccionService {
     }
    
     public Direccion createDireccion(String calle, String numero, String departamento, String codigoPostal,Comprador comprador) throws CategoriaDuplicadaException {
-        //List<Direccion> direcciones = direccionRepository.findById();
-        //if (direcciones.isEmpty()) {
-        return direccionRepository.save(new Direccion(calle, numero, departamento, codigoPostal,comprador)); //Guardo y retorno la nueva categoria
-        //}
-        //throw new CategoriaDuplicadaException(); //Falta ver que hacer si ya existe la categoria
+        return direccionRepository.save(new Direccion(calle, numero, departamento, codigoPostal,comprador)); 
     }
 
     public void deleteDireccion(Long id) {
@@ -47,6 +43,10 @@ public class DireccionServiceImpl implements DireccionService {
         direccion.setDepartamento(departamento);
         direccion.setCodigoPostal(codigoPostal);
         return direccionRepository.save(direccion);
+    }
+    
+    public List<Direccion> getDireccionesByCompradorId(Long compradorId) {
+    return direccionRepository.findByCompradorId(compradorId);
     }
     
 }

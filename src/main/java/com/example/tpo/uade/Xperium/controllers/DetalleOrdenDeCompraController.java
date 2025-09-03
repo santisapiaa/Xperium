@@ -81,6 +81,7 @@ public class DetalleOrdenDeCompraController {
             productoOpt.get(),
             ordenDeCompraOpt.get()
         );
+        
         return ResponseEntity.created(URI.create("/detallesOrdenDeCompra/" + resultado.getId())).body(resultado);
     }
 }

@@ -2,6 +2,8 @@ package com.example.tpo.uade.Xperium.entity;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -28,6 +30,8 @@ public class Comprador {
     private String telefono;
     @Column
     private String contraseña;
+
+  
 
     public Comprador() {
     }

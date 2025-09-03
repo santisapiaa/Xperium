@@ -16,13 +16,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.tpo.uade.Xperium.entity.Comprador;
-import com.example.tpo.uade.Xperium.entity.DetalleOrdenDeCompra;
 import com.example.tpo.uade.Xperium.entity.OrdenDeCompra;
 import com.example.tpo.uade.Xperium.entity.dto.OrdenDeCompraRequest;
 import com.example.tpo.uade.Xperium.exceptions.CategoriaDuplicadaException;
 import com.example.tpo.uade.Xperium.repository.CompradorRepository;
 import com.example.tpo.uade.Xperium.repository.DetalleOrdenDeCompraRepository;
-import com.example.tpo.uade.Xperium.repository.OrdenDeCompraRepository;
 import com.example.tpo.uade.Xperium.service.OrdenDeCompra.OrdenDeCompraService;
 
 @RestController
@@ -58,6 +56,8 @@ public class OrdenDeCompraController {
             return ResponseEntity.notFound().build(); // Retorna 404 si no se encuentra la categoría
         }
     }
+
+    
 
     @PostMapping
         public ResponseEntity<Object> createOrdenDeCompra(@RequestBody OrdenDeCompraRequest ordenDeCompraRequest)

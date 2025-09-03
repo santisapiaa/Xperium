@@ -30,12 +30,8 @@ public class OrdenDeCompraServiceImpl implements OrdenDeCompraService{
         return ordenDeCompraRepository.findById(id);
     }
 
-    public OrdenDeCompra createOrdenDeCompra(LocalDate fecha, double total, String estado, Comprador comprador /* , List<DetalleOrdenDeCompra> detalleOrdenDeCompra*/) throws CategoriaDuplicadaException{
-        //List<OrdenDeCompra> ordenDeCompras = ordenDeCompraRepository.findBy();
-        //if (ordenDeCompras.isEmpty()) {
-            return ordenDeCompraRepository.save(new OrdenDeCompra(fecha, total, estado, comprador /* , detalleOrdenDeCompra*/)); //Guardo y retorno la nueva categoria
-        //}
-        //throw new CategoriaDuplicadaException(); //Falta ver que hacer si ya existe la categoria
+    public OrdenDeCompra createOrdenDeCompra(LocalDate fecha, double total, String estado, Comprador comprador) throws CategoriaDuplicadaException{
+        return ordenDeCompraRepository.save(new OrdenDeCompra(fecha, total, estado, comprador)); //Guardo y retorno la nueva categoria
     }
 
     public void deleteOrdenDeCompra(Long id) {

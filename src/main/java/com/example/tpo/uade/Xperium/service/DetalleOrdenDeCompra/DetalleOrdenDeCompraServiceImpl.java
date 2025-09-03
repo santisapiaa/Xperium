@@ -21,6 +21,8 @@ public class DetalleOrdenDeCompraServiceImpl implements DetalleOrdenDeCompraServ
 
     @Autowired
     private DetalleOrdenDeCompraRepository detalleOrdenDeCompraRepository;
+    @Autowired
+    private OrdenDeCompraRepository ordenDeCompraRepository;
 
     public Page<DetalleOrdenDeCompra> getDetallesOrdenDeCompra(PageRequest pageRequest) {
         return detalleOrdenDeCompraRepository.findAll(pageRequest);
@@ -31,11 +33,15 @@ public class DetalleOrdenDeCompraServiceImpl implements DetalleOrdenDeCompraServ
     }
 
     public DetalleOrdenDeCompra createDetalleOrdenDeCompra(int cantidad, double precioUnitario, Producto producto, OrdenDeCompra ordenDeCompra) throws CategoriaDuplicadaException{
-        //List<OrdenDeCompra> ordenDeCompras = ordenDeCompraRepository.findBy();
-        //if (ordenDeCompras.isEmpty()) {
-            return detalleOrdenDeCompraRepository.save(new DetalleOrdenDeCompra(cantidad, precioUnitario, producto, ordenDeCompra)); //Guardo y retorno la nueva categoria
-        //}
-        //throw new CategoriaDuplicadaException(); //Falta ver que hacer si ya existe la categoria
+        DetalleOrdenDeCompra detalle = new DetalleOrdenDeCompra(cantidad, precioUnitario, producto, ordenDeCompra);
+        DetalleOrdenDeCompra guardado = detalleOrdenDeCompraRepository.save(detalle);
+
+        if (ordenDeCompra.getDetalleOrdenDeCompra() != null) {
+            ordenDeCompra.getDetalleOrdenDeCompra().add(guardado);
+        }
+        ordenDeCompra = ordenDeCompraRepository.findById(ordenDeCompra.getId()).orElseThrow();
+
+        return guardado;
     }
 
     public void deleteDetalleOrdenDeCompra(Long id) {

@@ -1,5 +1,6 @@
 package com.example.tpo.uade.Xperium.service.Direccion;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -20,5 +21,6 @@ public interface DireccionService {
     public void deleteDireccion(Long id);
 
     public Direccion updateDireccion(Long id, String calle, String numero, String departamento, String codigoPostal) throws Exception;
-
+    
+    public List<Direccion> getDireccionesByCompradorId(Long compradorId);
 }

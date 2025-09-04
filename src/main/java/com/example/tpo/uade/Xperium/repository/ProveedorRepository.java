@@ -17,5 +17,8 @@ public interface ProveedorRepository extends JpaRepository<Proveedor, Long> {
 
     @Query(value = "select p from Proveedor p where p.nombre = ?1")
     List<Proveedor> findByNombre(String nombre);
+
+    @Query(value = "select p from Proveedor p where p.email = ?1")
+    Optional<Proveedor> findByEmail(String email);
     
 }

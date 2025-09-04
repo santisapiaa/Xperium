@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.tpo.uade.Xperium.entity.Producto;
 import com.example.tpo.uade.Xperium.entity.Proveedor;
+import com.example.tpo.uade.Xperium.entity.Role;
 import com.example.tpo.uade.Xperium.exceptions.CategoriaDuplicadaException;
 import com.example.tpo.uade.Xperium.repository.ProveedorRepository;
 
@@ -32,7 +33,14 @@ public class ProveedorServiceImpl implements ProveedorService {
     public Proveedor createProveedor(String nombre, String email, String telefono, String contrasenia) throws CategoriaDuplicadaException{
         List<Proveedor> proveedor = proveedorRepository.findByNombre(nombre);
             if (proveedor.isEmpty()) {
-                return proveedorRepository.save(new Proveedor(nombre, email, telefono, contrasenia));           
+                Proveedor proveedorNuevo = Proveedor.builder()
+                    .nombre(nombre)
+                    .email(email)
+                    .telefono(telefono)
+                    .contrasenia(contrasenia)
+                    .role(Role.VENDEDOR) // o el rol que corresponda
+                    .build();
+                return proveedorRepository.save(proveedorNuevo);
             }
             throw new CategoriaDuplicadaException();
     }

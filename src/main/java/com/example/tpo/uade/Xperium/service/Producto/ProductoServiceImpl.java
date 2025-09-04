@@ -62,14 +62,14 @@ public class ProductoServiceImpl implements ProductoService {
     }
 
     @Override
-    public Producto updateDescuento(Long id, int descuento) {
-        Optional<Producto> productoOpt = productoRepository.findById(id);
-        if (productoOpt.isPresent()) {
-            Producto producto = productoOpt.get();
-            producto.setDescuento(descuento);
-            producto.setPrecioConDescuento(producto.getPrecio());
-            return productoRepository.save(producto); // Usas el repository aquí
-        }
-        throw new RuntimeException("Producto no encontrado");
+    @Transactional
+    public Producto updateDescuento(Long id, int nuevoDescuento) {
+        Producto p = productoRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+
+        p.setPrecioConDescuento(nuevoDescuento);
+
+        return productoRepository.save(p);
     }
+
 }

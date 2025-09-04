@@ -69,12 +69,19 @@ public class Producto {
         this.proveedor = proveedor;
     }
 
-    public void setPrecioConDescuento(double precioOriginal) {
-        if (descuento > 0 && descuento <= 100) {
-            this.precio = precioOriginal - (precioOriginal * descuento / 100.0);
-        
-        } else {
-            this.precio = precioOriginal;
+    public void setPrecioConDescuento(int nuevoDescuento) {
+        if (nuevoDescuento < 0 || nuevoDescuento > 100) {
+            throw new IllegalArgumentException("Descuento inválido (0 a 100).");
         }
+
+        double precioBase = descuento > 0
+            ? precio / (1 - descuento / 100.0)
+            : precio;
+
+        this.descuento = nuevoDescuento;
+        this.precio = nuevoDescuento > 0
+            ? precioBase * (1 - nuevoDescuento / 100.0)
+            : precioBase;
     }
+
 }

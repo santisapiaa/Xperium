@@ -31,8 +31,6 @@ public class Comprador {
     @Column
     private String contraseña;
 
-  
-
     public Comprador() {
     }
 

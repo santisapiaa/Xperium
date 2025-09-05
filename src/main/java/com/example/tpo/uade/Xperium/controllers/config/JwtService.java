@@ -20,6 +20,7 @@ import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SecretKeyBuilder;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Service
@@ -34,18 +35,21 @@ public class JwtService {
         return buildToken(userDetails, jwtExpiration);
     }
 
-    private String buildToken(
-            UserDetails userDetails,
-            long expiration) {
-        return Jwts
-                .builder()
-                .subject(userDetails.getUsername()) // prueba@hotmail.com
-                .issuedAt(new Date(System.currentTimeMillis()))
-                .claim("Gisele", 1234567)
-                .expiration(new Date(System.currentTimeMillis() + expiration))
-                .signWith(getSecretKey())
-                .compact();
-    }
+    private String buildToken(UserDetails userDetails, long expiration) {
+    return Jwts
+            .builder()
+            .subject(userDetails.getUsername())
+            .issuedAt(new Date(System.currentTimeMillis()))
+            .expiration(new Date(System.currentTimeMillis() + expiration))
+            // Guardar roles como claim adicional
+            .claim("roles", userDetails.getAuthorities().stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .toList())
+            .signWith(getSecretKey())
+            .compact();
+}
+
+    
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String username = extractClaim(token, Claims::getSubject);

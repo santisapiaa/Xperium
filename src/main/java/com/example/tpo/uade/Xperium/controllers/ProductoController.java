@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -68,27 +68,35 @@ public class ProductoController {
     }
 
     @PostMapping
-        public ResponseEntity<Object> createProducto(@RequestBody ProductoRequest productoRequest)
-            throws CategoriaDuplicadaException {
-        // Se crea una categoria que puede ser nula o no, si la id existe en la base de datos se asigna, sino se retorna un bad request
+    public ResponseEntity<Object> createProducto(@RequestBody ProductoRequest productoRequest) {
+        
         Optional<Proveedor> provedorOpt = proveedorRepository.findById(productoRequest.getProveedorId());
         Optional<Categoria> categoriaOpt = categoriaRepository.findById(productoRequest.getCategoriaId()); 
+        
         if (categoriaOpt.isEmpty()) {
             return ResponseEntity.badRequest().body("Categoría no encontrada");
         }
-        Producto resultado = productoService.createProducto(
-            productoRequest.getNombre(),
-            productoRequest.getDescripcion(),
-            productoRequest.getImagenUrl(),
-            productoRequest.getPrecio(),
-            productoRequest.getEstado(),
-            productoRequest.getStock(),
-            productoRequest.getUbicacion(),
-            productoRequest.getCantPersonas(),
-            categoriaOpt.get(),
-            provedorOpt.get()
-        );
-        return ResponseEntity.created(URI.create("/productos/" + resultado.getId())).body(resultado);
+        if (provedorOpt.isEmpty()) {
+            return ResponseEntity.badRequest().body("Proveedor no encontrado");
+        }
+        
+        try {
+            Producto resultado = productoService.createProducto(
+                productoRequest.getNombre(),
+                productoRequest.getDescripcion(),
+                productoRequest.getImagenUrl(),
+                productoRequest.getPrecio(),
+                productoRequest.getEstado(),
+                productoRequest.getStock(),
+                productoRequest.getUbicacion(),
+                productoRequest.getCantPersonas(),
+                categoriaOpt.get(),
+                provedorOpt.get()
+            );
+            return ResponseEntity.created(URI.create("/productos/" + resultado.getId())).body(resultado);
+        } catch (CategoriaDuplicadaException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Ya existe un producto con este nombre.");
+        }
     }
 
     @PutMapping("/{id}")

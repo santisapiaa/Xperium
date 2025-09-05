@@ -17,10 +17,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.tpo.uade.Xperium.entity.Comprador;
 import com.example.tpo.uade.Xperium.entity.Producto;
 import com.example.tpo.uade.Xperium.entity.Proveedor;
 import com.example.tpo.uade.Xperium.entity.dto.ProveedorRequest;
 import com.example.tpo.uade.Xperium.exceptions.CategoriaDuplicadaException;
+import com.example.tpo.uade.Xperium.repository.CompradorRepository;
+import com.example.tpo.uade.Xperium.repository.DetalleOrdenDeCompraRepository;
+import com.example.tpo.uade.Xperium.repository.ProveedorRepository;
+import com.example.tpo.uade.Xperium.service.OrdenDeCompra.OrdenDeCompraService;
 import com.example.tpo.uade.Xperium.service.Proveedor.ProveedorService;
 
 @RestController
@@ -30,6 +35,8 @@ public class ProveedorController {
     // Inyección de dependencia del servicio de categoría
     @Autowired
     private ProveedorService proveedorService;
+    @Autowired
+    private ProveedorRepository proveedorRepository;
 
     // Endpoint para obtener todas las categorias con paginación
     @GetMapping
@@ -57,7 +64,6 @@ public class ProveedorController {
     @PostMapping
     public ResponseEntity<Object> createProveedor(@RequestBody ProveedorRequest proveedorRequest)
             throws CategoriaDuplicadaException {
-        // Crea una nueva categoría
         Proveedor resultado = proveedorService.createProveedor(proveedorRequest.getNombre(), proveedorRequest.getEmail(), proveedorRequest.getTelefono(), proveedorRequest.getContrasenia()); 
         return ResponseEntity.created(URI.create("/proveedores/" + resultado.getId())).body(resultado); // Retorna 201 Created con la ubicación de la nueva categoría
     }

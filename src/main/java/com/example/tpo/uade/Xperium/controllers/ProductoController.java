@@ -1,6 +1,7 @@
 package com.example.tpo.uade.Xperium.controllers;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.tpo.uade.Xperium.entity.Categoria;
@@ -25,10 +28,19 @@ public class ProductoController {
 
     @Autowired
     private ProductoService productoService;
+
     @Autowired
     private CategoriaRepository categoriaRepository;
+
     @Autowired
     private ProveedorRepository proveedorRepository;
+
+    private Proveedor getAuthenticatedProveedor() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        return proveedorRepository.findByEmail(email)
+            .orElseThrow(() -> new RuntimeException("Proveedor no encontrado en el contexto de seguridad"));
+    }
 
     @GetMapping
     public ResponseEntity<Page<ProductoRequest>> getProducto(
@@ -60,9 +72,81 @@ public class ProductoController {
         return ResponseEntity.ok(productoRequestPage);
     }
 
+
+    @GetMapping("/{categoriaId}/categoria")
+    public ResponseEntity<Page<ProductoRequest>> getProductoByCategoryId(
+        @PathVariable Long categoriaId,
+        @RequestParam(required = false) Integer page,
+        @RequestParam(required = false) Integer size) {
+
+        Optional<Categoria> categoria = categoriaRepository.findById(categoriaId);
+        if (categoria.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        Page<Producto> productos;
+        if (page == null || size == null) {
+            productos = productoService.getProductoByCategoriaId(categoriaId,
+             PageRequest.of(0, Integer.MAX_VALUE));
+        } else {
+            productos = productoService.getProductoByCategoriaId(categoriaId,
+             PageRequest.of(page, size));
+        }
+        Page<ProductoRequest> productoRequestPage = productos.map(producto -> {
+            ProductoRequest dto = new ProductoRequest();
+            dto.setId(producto.getId());
+            dto.setNombre(producto.getNombre());
+            dto.setDescripcion(producto.getDescripcion());
+            dto.setImagenUrl(producto.getImagenUrl());
+            dto.setPrecio(producto.getPrecio());
+            dto.setEstado(producto.getEstado());
+            dto.setStock(producto.getStock());
+            dto.setUbicacion(producto.getUbicacion());
+            dto.setCantPersonas(producto.getCantPersonas());
+            dto.setDescuento(producto.getDescuento());
+            dto.setCategoriaId(producto.getCategoria().getId());
+            dto.setProveedorId(producto.getProveedor().getId());
+            return dto;
+        });
+        return ResponseEntity.ok(productoRequestPage);
+    }
+
+
+    @GetMapping("/misproductos")
+    public ResponseEntity<Page<ProductoRequest>> getMisProducto(
+        @RequestParam(required = false) Integer page,
+        @RequestParam(required = false) Integer size)
+    {
+        Proveedor proveedor = getAuthenticatedProveedor();
+        Page<Producto> productos;
+        if (page == null || size == null) {
+            productos = productoService.getProductoByProveedorId(proveedor.getId(), PageRequest.of(0, Integer.MAX_VALUE));
+        } else {
+            productos = productoService.getProductoByProveedorId(proveedor.getId(), PageRequest.of(page, size));
+        }
+        Page<ProductoRequest> productoRequestPage = productos.map(producto -> {
+            ProductoRequest dto = new ProductoRequest();
+            dto.setId(producto.getId());
+            dto.setNombre(producto.getNombre());
+            dto.setDescripcion(producto.getDescripcion());
+            dto.setImagenUrl(producto.getImagenUrl());
+            dto.setPrecio(producto.getPrecio());
+            dto.setEstado(producto.getEstado());
+            dto.setStock(producto.getStock());
+            dto.setUbicacion(producto.getUbicacion());
+            dto.setCantPersonas(producto.getCantPersonas());
+            dto.setDescuento(producto.getDescuento());
+            dto.setCategoriaId(producto.getCategoria().getId());
+            dto.setProveedorId(producto.getProveedor().getId());
+            return dto;
+        });
+        return ResponseEntity.ok(productoRequestPage);
+    }
+
     @GetMapping("/{productoId}")
     public ResponseEntity<ProductoRequest> getProductoById(@PathVariable Long productoId) {
-        Optional<Producto> resultado = productoService.getProductoById(productoId);
+        Proveedor proveedor = getAuthenticatedProveedor();
+        Optional<Producto> resultado = productoService.getProductoByIdAndProveedorId(productoId, proveedor.getId());
         if (resultado.isPresent()) {
             Producto producto = resultado.get();
             ProductoRequest dto = new ProductoRequest();
@@ -86,14 +170,11 @@ public class ProductoController {
 
     @PostMapping
     public ResponseEntity<Object> createProducto(@RequestBody ProductoRequest productoRequest) {
-        Optional<Proveedor> proveedorOpt = proveedorRepository.findById(productoRequest.getProveedorId());
+        Proveedor proveedor = getAuthenticatedProveedor();
         Optional<Categoria> categoriaOpt = categoriaRepository.findById(productoRequest.getCategoriaId());
         
         if (categoriaOpt.isEmpty()) {
             return ResponseEntity.badRequest().body("Categoría no encontrada");
-        }
-        if (proveedorOpt.isEmpty()) {
-            return ResponseEntity.badRequest().body("Proveedor no encontrado");
         }
         
         try {
@@ -107,7 +188,7 @@ public class ProductoController {
                 productoRequest.getUbicacion(),
                 productoRequest.getCantPersonas(),
                 categoriaOpt.get(),
-                proveedorOpt.get()
+                proveedor // Usar el proveedor autenticado
             );
             return ResponseEntity.created(URI.create("/productos/" + resultado.getId())).body("Producto creado con éxito");
         } catch (CategoriaDuplicadaException e) {
@@ -119,13 +200,15 @@ public class ProductoController {
     public ResponseEntity<ProductoRequest> updateProducto(
         @PathVariable Long id,
         @RequestBody ProductoRequest productoRequest) {
+        Proveedor proveedor = getAuthenticatedProveedor();
         Optional<Categoria> categoriaOpt = categoriaRepository.findById(productoRequest.getCategoriaId());
         if (categoriaOpt.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
         try {
-            Producto updated = productoService.updateProducto(
+            Producto updated = productoService.updateProductoByIdAndProveedorId(
                 id,
+                proveedor.getId(),
                 productoRequest.getNombre(),
                 productoRequest.getDescripcion(),
                 productoRequest.getImagenUrl(),
@@ -159,8 +242,9 @@ public class ProductoController {
     public ResponseEntity<ProductoRequest> updateDescuento(
         @PathVariable Long id,
         @RequestBody ProductoRequest productoRequest) {
+        Proveedor proveedor = getAuthenticatedProveedor();
         try {
-            Producto productoActualizado = productoService.updateDescuento(id, productoRequest.getDescuento());
+            Producto productoActualizado = productoService.updateDescuentoByIdAndProveedorId(id, proveedor.getId(), productoRequest.getDescuento());
             ProductoRequest dto = new ProductoRequest();
             dto.setId(productoActualizado.getId());
             dto.setNombre(productoActualizado.getNombre());
@@ -175,18 +259,18 @@ public class ProductoController {
             dto.setCategoriaId(productoActualizado.getCategoria().getId());
             dto.setProveedorId(productoActualizado.getProveedor().getId());
             return ResponseEntity.ok(dto);
-        } catch (RuntimeException e) {
+        } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProducto(@PathVariable Long id) {
-        Optional<Producto> producto = productoService.getProductoById(id);
-        if (producto.isPresent()) {
-            productoService.deleteProducto(id);
+        Proveedor proveedor = getAuthenticatedProveedor();
+        try {
+            productoService.deleteProductoByIdAndProveedorId(id, proveedor.getId());
             return ResponseEntity.noContent().build();
-        } else {
+        } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
     }

@@ -1,5 +1,6 @@
 package com.example.tpo.uade.Xperium.service.Producto;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -15,13 +16,25 @@ public interface ProductoService {
     
     public Page<Producto> getProducto(PageRequest pageRequest);
 
+    public Page<Producto> getProductoByProveedorId(Long proveedorId, PageRequest pageRequest);
+
     public Optional<Producto> getProductoById(Long id);
 
-    public Producto createProducto(String nombre, String descripcion, String imagenUrl, double precio, String estado, int stock, String ubicacion, int cantPersonas,Categoria categoria, Proveedor proveedor) throws CategoriaDuplicadaException;
+    public Optional<Producto> getProductoByIdAndProveedorId(Long id, Long proveedorId);
+
+    public Producto createProducto(String nombre, String descripcion, String imagenUrl, double precio, String estado, int stock, String ubicacion, int cantPersonas, Categoria categoria, Proveedor proveedor) throws CategoriaDuplicadaException;
     
     public void deleteProducto(Long id);
 
+    public void deleteProductoByIdAndProveedorId(Long id, Long proveedorId) throws Exception;
+
     public Producto updateProducto(Long id, String nombre, String descripcion, String imagenUrl, double precio, String estado, int stock, String ubicacion, int cantPersonas, Categoria categoria) throws Exception;
 
+    public Producto updateProductoByIdAndProveedorId(Long id, Long proveedorId, String nombre, String descripcion, String imagenUrl, double precio, String estado, int stock, String ubicacion, int cantPersonas, Categoria categoria) throws Exception;
+
     public Producto updateDescuento(Long id, int descuento);
+
+    public Page<Producto> getProductoByCategoriaId(Long categoriaId,PageRequest pageRequest);
+
+    public Producto updateDescuentoByIdAndProveedorId(Long id, Long proveedorId, int descuento) throws Exception;
 }

@@ -47,5 +47,16 @@ public class OrdenDeCompra {
         this.estado = estado;
         this.comprador = comprador;
     }
+
+    // Método para recalcular el total basado en los detalles
+    public void recalculateTotal() {
+        if (detalleOrdenDeCompra != null) {
+            this.total = detalleOrdenDeCompra.stream()
+                    .mapToDouble(d -> d.getCantidad() * d.getPrecioUnitario())
+                    .sum();
+        } else {
+            this.total = 0.0;
+        }
+    }
     
 }

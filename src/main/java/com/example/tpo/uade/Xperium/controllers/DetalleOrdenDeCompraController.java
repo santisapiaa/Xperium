@@ -84,10 +84,13 @@ public class DetalleOrdenDeCompraController {
             ordenDeCompraOpt.get()
         );
 
+        OrdenDeCompra ordenDeCompra = ordenDeCompraOpt.get();
+        ordenDeCompra.setTotal(ordenDeCompra.getTotal() + resultado.getPrecioUnitario());
+        ordenDeCompraRepository.save(ordenDeCompra);
+
         // Actualizar el stock del producto
         producto.setStock(producto.getStock() - detalleOrdenDeCompraRequest.getCantidad());
         productoRepository.save(producto);
-        
         
         return ResponseEntity.created(URI.create("/detallesOrdenDeCompra/" + resultado.getId())).body(resultado);
     }

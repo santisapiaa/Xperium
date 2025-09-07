@@ -102,11 +102,11 @@ public class OrdenDeCompraController {
         Optional<OrdenDeCompra> ordenOpt = ordenDeCompraService.getOrdenesDeCompraByIdAndCompradorId(ordenDeCompraId, comprador.getId());
         if (ordenOpt.isPresent()) {
             OrdenDeCompra orden = ordenOpt.get();
-            if ("PENDIENTE".equals(orden.getEstado())) {
+            if ("PENDIENTE".equals(orden.getEstado()) && orden.getTotal() > 0) {
                 orden = ordenDeCompraService.finalizeOrdenDeCompra(ordenDeCompraId);
                 return ResponseEntity.ok(orden);
             } else {
-                return ResponseEntity.badRequest().body("No hay una orden en estado PENDIENTE");
+                return ResponseEntity.badRequest().body("La orden no está en estado PENDIENTE o no tiene productos agregados.");
             }
         } else {
             return ResponseEntity.notFound().build();

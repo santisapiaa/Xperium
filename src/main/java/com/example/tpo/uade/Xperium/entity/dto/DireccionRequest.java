@@ -1,8 +1,5 @@
 package com.example.tpo.uade.Xperium.entity.dto;
 
-import com.example.tpo.uade.Xperium.entity.Comprador;
-
-import jakarta.persistence.Column;
 import lombok.Data;
 
 @Data

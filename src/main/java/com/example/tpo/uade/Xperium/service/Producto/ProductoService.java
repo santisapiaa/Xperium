@@ -1,6 +1,5 @@
 package com.example.tpo.uade.Xperium.service.Producto;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -9,7 +8,6 @@ import org.springframework.data.domain.PageRequest;
 import com.example.tpo.uade.Xperium.entity.Categoria;
 import com.example.tpo.uade.Xperium.entity.Producto;
 import com.example.tpo.uade.Xperium.entity.Proveedor;
-import com.example.tpo.uade.Xperium.entity.dto.ProductoRequest;
 import com.example.tpo.uade.Xperium.exceptions.CategoriaDuplicadaException;
 
 public interface ProductoService {

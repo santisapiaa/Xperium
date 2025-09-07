@@ -1,7 +1,6 @@
 package com.example.tpo.uade.Xperium.service.OrdenDeCompra;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,32 +9,66 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.example.tpo.uade.Xperium.entity.Comprador;
-import com.example.tpo.uade.Xperium.entity.DetalleOrdenDeCompra;
-import com.example.tpo.uade.Xperium.entity.Direccion;
 import com.example.tpo.uade.Xperium.entity.OrdenDeCompra;
 import com.example.tpo.uade.Xperium.exceptions.CategoriaDuplicadaException;
 import com.example.tpo.uade.Xperium.repository.OrdenDeCompraRepository;
 
 @Service
-public class OrdenDeCompraServiceImpl implements OrdenDeCompraService{
+public class OrdenDeCompraServiceImpl implements OrdenDeCompraService {
 
     @Autowired
     private OrdenDeCompraRepository ordenDeCompraRepository;
 
+    @Override
     public Page<OrdenDeCompra> getOrdenesDeCompra(PageRequest pageRequest) {
         return ordenDeCompraRepository.findAll(pageRequest);
     }
 
+    @Override
     public Optional<OrdenDeCompra> getOrdenesDeCompraById(Long id) {
         return ordenDeCompraRepository.findById(id);
     }
 
-    public OrdenDeCompra createOrdenDeCompra(LocalDate fecha, double total, String estado, Comprador comprador) throws CategoriaDuplicadaException{
-        return ordenDeCompraRepository.save(new OrdenDeCompra(fecha, total, estado, comprador)); //Guardo y retorno la nueva categoria
+    @Override
+    public Optional<OrdenDeCompra> getOrdenesDeCompraByIdAndCompradorId(Long id, Long compradorId) {
+        return ordenDeCompraRepository.findByIdAndCompradorId(id, compradorId);
     }
 
+    @Override
+    public Page<OrdenDeCompra> getOrdenesDeCompraByCompradorId(Long compradorId, PageRequest pageRequest) {
+        return ordenDeCompraRepository.findByCompradorId(compradorId, pageRequest);
+    }
+
+    @Override
+    public OrdenDeCompra createOrdenDeCompra(LocalDate fecha, double total, String estado, Comprador comprador) throws CategoriaDuplicadaException {
+        return ordenDeCompraRepository.save(new OrdenDeCompra(fecha, total, estado, comprador));
+    }
+
+    @Override
     public void deleteOrdenDeCompra(Long id) {
         ordenDeCompraRepository.deleteById(id);
     }
-    
+
+    @Override
+    public OrdenDeCompra finalizeOrdenDeCompra(Long id) {
+        // Buscar la orden por ID
+        Optional<OrdenDeCompra> ordenOpt = ordenDeCompraRepository.findById(id);
+        if (ordenOpt.isPresent()) {
+            OrdenDeCompra orden = ordenOpt.get();
+            // Verificar que la orden esté en estado PENDIENTE
+            if ("PENDIENTE".equals(orden.getEstado())) {
+                orden.setEstado("FINALIZADA");
+                // Opcional: Coordinar con DetalleOrdenDeCompraService para confirmar stock
+                orden.getDetalleOrdenDeCompra().forEach(detalle -> {
+                    // Aquí podrías llamar a un método para confirmar el stock permanentemente
+                    // Ejemplo: detalleOrdenDeCompraService.confirmStock(detalle);
+                });
+                return ordenDeCompraRepository.save(orden);
+            } else {
+                throw new RuntimeException("La orden no está en estado PENDIENTE");
+            }
+        } else {
+            throw new RuntimeException("Orden no encontrada");
+        }
+    }
 }

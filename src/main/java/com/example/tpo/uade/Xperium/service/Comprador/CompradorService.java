@@ -6,18 +6,20 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
 import com.example.tpo.uade.Xperium.entity.Comprador;
+import com.example.tpo.uade.Xperium.entity.dto.CompradorRequest;
 import com.example.tpo.uade.Xperium.exceptions.CategoriaDuplicadaException;
 
 public interface CompradorService {
 
-    public Page<Comprador> getCompradores(PageRequest pageRequest);
+    Page<Comprador> getCompradores(PageRequest pageRequest);
 
-    public Optional<Comprador> getCompradoresById(Long id);
+    Optional<Comprador> getCompradoresById(Long id);
 
-    public Comprador createComprador(String nombre, String apellido, String email, String telefono, String contraseña) throws CategoriaDuplicadaException;
+    Comprador createComprador(String nombre, String apellido, String email, String telefono, String contrasenia) throws CategoriaDuplicadaException;
 
-    public void deleteComprador(Long id);
-
-    public Comprador updateComprador(Long id, String nombre, String apellido, String email, String telefono, String contraseña) throws Exception;
-
+    void deleteComprador(Long id, Long authenticatedCompradorId) throws Exception;
+    
+    Comprador updateComprador(Long id, Long authenticatedCompradorId, String nombre, String apellido, String email, String telefono) throws Exception;
+    
+    Optional<Comprador> findByEmail(String email);
 }

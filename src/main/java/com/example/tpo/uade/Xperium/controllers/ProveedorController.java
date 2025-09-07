@@ -17,15 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.tpo.uade.Xperium.entity.Comprador;
-import com.example.tpo.uade.Xperium.entity.Producto;
 import com.example.tpo.uade.Xperium.entity.Proveedor;
 import com.example.tpo.uade.Xperium.entity.dto.ProveedorRequest;
 import com.example.tpo.uade.Xperium.exceptions.CategoriaDuplicadaException;
-import com.example.tpo.uade.Xperium.repository.CompradorRepository;
-import com.example.tpo.uade.Xperium.repository.DetalleOrdenDeCompraRepository;
-import com.example.tpo.uade.Xperium.repository.ProveedorRepository;
-import com.example.tpo.uade.Xperium.service.OrdenDeCompra.OrdenDeCompraService;
 import com.example.tpo.uade.Xperium.service.Proveedor.ProveedorService;
 
 @RestController
@@ -35,8 +29,6 @@ public class ProveedorController {
     // Inyección de dependencia del servicio de categoría
     @Autowired
     private ProveedorService proveedorService;
-    @Autowired
-    private ProveedorRepository proveedorRepository;
 
     // Endpoint para obtener todas las categorias con paginación
     @GetMapping

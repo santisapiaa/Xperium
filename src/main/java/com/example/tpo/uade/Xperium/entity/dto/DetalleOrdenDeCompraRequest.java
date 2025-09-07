@@ -1,8 +1,5 @@
 package com.example.tpo.uade.Xperium.entity.dto;
 
-import com.example.tpo.uade.Xperium.entity.OrdenDeCompra;
-import com.example.tpo.uade.Xperium.entity.Producto;
-
 import lombok.Data;
 
 @Data

@@ -15,23 +15,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.tpo.uade.Xperium.entity.Categoria;
 import com.example.tpo.uade.Xperium.entity.Comprador;
 import com.example.tpo.uade.Xperium.entity.DetalleOrdenDeCompra;
 import com.example.tpo.uade.Xperium.entity.OrdenDeCompra;
 import com.example.tpo.uade.Xperium.entity.Producto;
-import com.example.tpo.uade.Xperium.entity.Proveedor;
 import com.example.tpo.uade.Xperium.entity.dto.DetalleOrdenDeCompraRequest;
-import com.example.tpo.uade.Xperium.entity.dto.ProductoRequest;
 import com.example.tpo.uade.Xperium.exceptions.CategoriaDuplicadaException;
-import com.example.tpo.uade.Xperium.repository.CategoriaRepository;
-import com.example.tpo.uade.Xperium.repository.CompradorRepository;
 import com.example.tpo.uade.Xperium.repository.OrdenDeCompraRepository;
 import com.example.tpo.uade.Xperium.repository.ProductoRepository;
-import com.example.tpo.uade.Xperium.repository.ProveedorRepository;
 import com.example.tpo.uade.Xperium.service.DetalleOrdenDeCompra.DetalleOrdenDeCompraService;
-import com.example.tpo.uade.Xperium.service.DetalleOrdenDeCompra.DetalleOrdenDeCompraServiceImpl;
-import com.example.tpo.uade.Xperium.service.Producto.ProductoService;
 
 @RestController
 @RequestMapping("detallesOrdenDeCompra")
@@ -70,17 +62,32 @@ public class DetalleOrdenDeCompraController {
         public ResponseEntity<Object> createDetalleOrdenDeCompra(@RequestBody DetalleOrdenDeCompraRequest detalleOrdenDeCompraRequest)
             throws CategoriaDuplicadaException {
         // Se crea una categoria que puede ser nula o no, si la id existe en la base de datos se asigna, sino se retorna un bad request
-        Optional<Producto> productoOpt = productoRepository.findById(detalleOrdenDeCompraRequest.getProductoId());
         Optional<OrdenDeCompra> ordenDeCompraOpt = ordenDeCompraRepository.findById(detalleOrdenDeCompraRequest.getOrdenDeCompraId()); 
+        if (ordenDeCompraOpt.isEmpty()) {
+            return ResponseEntity.badRequest().body("OrdenDeCompra no encontrado");
+        }
+        
+        Optional<Producto> productoOpt = productoRepository.findById(detalleOrdenDeCompraRequest.getProductoId());
         if (productoOpt.isEmpty()) {
             return ResponseEntity.badRequest().body("Producto no encontrado");
         }
+
+        Producto producto = productoOpt.get();
+        if (producto.getStock() < detalleOrdenDeCompraRequest.getCantidad() || !"DISPONIBLE".equals(producto.getEstado())) {
+            return ResponseEntity.badRequest().body("Stock insuficiente o producto no disponible");
+        }
+
         DetalleOrdenDeCompra resultado = detalleOrdenDeCompraService.createDetalleOrdenDeCompra(
             detalleOrdenDeCompraRequest.getCantidad(),
-            detalleOrdenDeCompraRequest.getPrecioUnitario(),
+            productoOpt.get().getPrecio()*detalleOrdenDeCompraRequest.getCantidad(),
             productoOpt.get(),
             ordenDeCompraOpt.get()
         );
+
+        // Actualizar el stock del producto
+        producto.setStock(producto.getStock() - detalleOrdenDeCompraRequest.getCantidad());
+        productoRepository.save(producto);
+        
         
         return ResponseEntity.created(URI.create("/detallesOrdenDeCompra/" + resultado.getId())).body(resultado);
     }

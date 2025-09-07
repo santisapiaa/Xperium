@@ -4,104 +4,89 @@ import java.net.URI;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
 
-import org.springframework.transaction.annotation.Transactional;
-
-import com.example.tpo.uade.Xperium.entity.Categoria;
 import com.example.tpo.uade.Xperium.entity.Comprador;
 import com.example.tpo.uade.Xperium.entity.Direccion;
-import com.example.tpo.uade.Xperium.entity.Producto;
-import com.example.tpo.uade.Xperium.entity.Proveedor;
-import com.example.tpo.uade.Xperium.entity.dto.CategoriaRequest;
 import com.example.tpo.uade.Xperium.entity.dto.DireccionRequest;
-import com.example.tpo.uade.Xperium.entity.dto.ProductoRequest;
 import com.example.tpo.uade.Xperium.exceptions.CategoriaDuplicadaException;
-import com.example.tpo.uade.Xperium.repository.CategoriaRepository;
 import com.example.tpo.uade.Xperium.repository.CompradorRepository;
-import com.example.tpo.uade.Xperium.repository.DireccionRepository;
-import com.example.tpo.uade.Xperium.repository.ProveedorRepository;
 import com.example.tpo.uade.Xperium.service.Direccion.DireccionService;
-import com.example.tpo.uade.Xperium.service.Producto.ProductoService;
-
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
-@RequestMapping("direccion")
+@RequestMapping("direcciones")
 public class DireccionController {
 
-    // Inyección de dependencia del servicio de categoría
     @Autowired
     private DireccionService direccionService;
-    @Autowired
-    private DireccionRepository direccionRepository;
+
     @Autowired
     private CompradorRepository compradorRepository;
 
-    // Endpoint para obtener todas las categorias con paginación
+    private Comprador getAuthenticatedComprador() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        return compradorRepository.findByEmail(email)
+            .orElseThrow(() -> new RuntimeException("Comprador no encontrado en el contexto de seguridad"));
+    }
+
     @GetMapping
-    public ResponseEntity<Page<Direccion>> getDireccion(  
-            @RequestParam(required = false) Integer page, // Página actual
-            @RequestParam(required = false) Integer size) // Tamaño de la página
-    {
-        if (page == null || size == null) { // Si no se especifica página o tamaño, retornar todas las categorías
-            return ResponseEntity.ok(direccionService.getDirecciones(PageRequest.of(0, Integer.MAX_VALUE))); // Retorna todas las categorías sin paginación
+    public ResponseEntity<Page<Direccion>> getDirecciones(
+            @RequestParam(required = false) Integer page,
+            @RequestParam(required = false) Integer size) {
+        Comprador comprador = getAuthenticatedComprador();
+        Page<Direccion> direcciones;
+        if (page == null || size == null) {
+            direcciones = direccionService.getDireccionesByCompradorId(comprador.getId(), PageRequest.of(0, Integer.MAX_VALUE));
+        } else {
+            direcciones = direccionService.getDireccionesByCompradorId(comprador.getId(), PageRequest.of(page, size));
         }
-        return ResponseEntity.ok(direccionService.getDirecciones(PageRequest.of(page, size))); // Retorna las categorías con paginación
+        return ResponseEntity.ok(direcciones);
     }
 
     @GetMapping("/{direccionId}")
     public ResponseEntity<Direccion> getDireccionById(@PathVariable Long direccionId) {
-        Optional<Direccion> resultado = direccionService.getDireccionesById(direccionId);
+        Comprador comprador = getAuthenticatedComprador();
+        Optional<Direccion> resultado = direccionService.getDireccionesByIdAndCompradorId(direccionId, comprador.getId());
         if (resultado.isPresent()) {
-            return ResponseEntity.ok(resultado.get()); // Retorna la categoría encontrada
+            return ResponseEntity.ok(resultado.get());
         } else {
-            return ResponseEntity.notFound().build(); // Retorna 404 si no se encuentra la categoría
+            return ResponseEntity.notFound().build();
         }
     }
 
     @PostMapping
-        public ResponseEntity<Object> createDireccion(@RequestBody DireccionRequest direccionRequest)
+    public ResponseEntity<Object> createDireccion(@RequestBody DireccionRequest direccionRequest)
             throws CategoriaDuplicadaException {
-        // Se crea una categoria que puede ser nula o no, si la id existe en la base de datos se asigna, sino se retorna un bad request
-        Optional<Comprador> compradorOpt = compradorRepository.findById(direccionRequest.getCompradorId()); 
-        if (compradorOpt.isEmpty()) {
-            return ResponseEntity.badRequest().body("Usuario no encontrada");
-        }
+        Comprador comprador = getAuthenticatedComprador();
         Direccion resultado = direccionService.createDireccion(
-            direccionRequest.getCalle(), 
-            direccionRequest.getNumero(), 
-            direccionRequest.getDepartamento(), 
+            direccionRequest.getCalle(),
+            direccionRequest.getNumero(),
+            direccionRequest.getDepartamento(),
             direccionRequest.getCodigoPostal(),
-            compradorOpt.get()
-            
+            comprador
         );
-        return ResponseEntity.created(URI.create("/direccion/" + resultado.getId())).body(resultado);
+        return ResponseEntity.created(URI.create("/direcciones/" + resultado.getId())).body(resultado);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Direccion> updateDireccion(
             @PathVariable Long id,
             @RequestBody DireccionRequest direccionRequest) {
+        Comprador comprador = getAuthenticatedComprador();
         try {
             Direccion updated = direccionService.updateDireccion(
                 id,
+                comprador.getId(),
                 direccionRequest.getCalle(),
                 direccionRequest.getNumero(),
                 direccionRequest.getDepartamento(),
-                direccionRequest.getCodigoPostal() 
+                direccionRequest.getCodigoPostal()
             );
             return ResponseEntity.ok(updated);
         } catch (Exception e) {
@@ -111,12 +96,12 @@ public class DireccionController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteDireccion(@PathVariable Long id) {
-        Optional<Direccion> direccion = direccionService.getDireccionesById(id);
-        if (direccion.isPresent()) {
-            direccionService.deleteDireccion(id);
-            return ResponseEntity.noContent().build(); // 204 No Content
-        } else {
-            return ResponseEntity.notFound().build(); // 404 Not Found
+        Comprador comprador = getAuthenticatedComprador();
+        try {
+            direccionService.deleteDireccionByIdAndCompradorId(id, comprador.getId());
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
         }
     }
 }

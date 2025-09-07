@@ -1,6 +1,5 @@
 package com.example.tpo.uade.Xperium.service.Direccion;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -12,15 +11,13 @@ import com.example.tpo.uade.Xperium.exceptions.CategoriaDuplicadaException;
 
 public interface DireccionService {
 
-    public Page<Direccion> getDirecciones(PageRequest pageRequest);
+    Page<Direccion> getDireccionesByCompradorId(Long compradorId, PageRequest pageRequest);
 
-    public Optional<Direccion> getDireccionesById(Long id);
+    Optional<Direccion> getDireccionesByIdAndCompradorId(Long id, Long compradorId);
 
-    public Direccion createDireccion(String calle, String numero, String departamento, String codigoPostal,Comprador comprador) throws CategoriaDuplicadaException;
+    Direccion createDireccion(String calle, String numero, String departamento, String codigoPostal, Comprador comprador) throws CategoriaDuplicadaException;
 
-    public void deleteDireccion(Long id);
+    void deleteDireccionByIdAndCompradorId(Long id, Long compradorId) throws Exception;
 
-    public Direccion updateDireccion(Long id, String calle, String numero, String departamento, String codigoPostal) throws Exception;
-    
-    public List<Direccion> getDireccionesByCompradorId(Long compradorId);
+    Direccion updateDireccion(Long id, Long compradorId, String calle, String numero, String departamento, String codigoPostal) throws Exception;
 }

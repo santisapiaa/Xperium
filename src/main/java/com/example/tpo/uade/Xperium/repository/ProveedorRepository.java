@@ -7,8 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import com.example.tpo.uade.Xperium.entity.Proveedor;
 
-import org.springframework.stereotype.Repository;
-
 @Repository
 public interface ProveedorRepository extends JpaRepository<Proveedor, Long> {
     

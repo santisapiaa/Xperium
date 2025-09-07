@@ -1,6 +1,5 @@
 package com.example.tpo.uade.Xperium.service.DetalleOrdenDeCompra;
 
-import java.time.LocalDate;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +7,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import com.example.tpo.uade.Xperium.entity.Comprador;
 import com.example.tpo.uade.Xperium.entity.DetalleOrdenDeCompra;
 import com.example.tpo.uade.Xperium.entity.OrdenDeCompra;
 import com.example.tpo.uade.Xperium.entity.Producto;

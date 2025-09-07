@@ -13,7 +13,6 @@ import com.example.tpo.uade.Xperium.entity.Categoria;
 import com.example.tpo.uade.Xperium.entity.Producto;
 import com.example.tpo.uade.Xperium.entity.Proveedor;
 import com.example.tpo.uade.Xperium.exceptions.CategoriaDuplicadaException;
-import com.example.tpo.uade.Xperium.repository.CategoriaRepository;
 import com.example.tpo.uade.Xperium.repository.ProductoRepository;
 
 @Service
@@ -21,9 +20,6 @@ public class ProductoServiceImpl implements ProductoService {
     
     @Autowired
     private ProductoRepository productoRepository;
-
-    @Autowired
-    private CategoriaRepository categoriaRepository;
 
     @Override
     public Page<Producto> getProducto(PageRequest pageRequest) {

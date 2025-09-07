@@ -1,6 +1,5 @@
 package com.example.tpo.uade.Xperium.repository;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,5 +15,6 @@ public interface CompradorRepository extends JpaRepository<Comprador, Long>{
     Optional<Comprador> findById(Long id);
 
     @Query(value = "select c from Comprador c where c.email = ?1")
-    List<Comprador> findByEmail(String email);
+    Optional<Comprador> findByEmail(String email);
+
 }

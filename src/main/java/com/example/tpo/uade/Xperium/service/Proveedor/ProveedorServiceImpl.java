@@ -8,7 +8,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import com.example.tpo.uade.Xperium.entity.Producto;
 import com.example.tpo.uade.Xperium.entity.Proveedor;
 import com.example.tpo.uade.Xperium.entity.Role;
 import com.example.tpo.uade.Xperium.exceptions.CategoriaDuplicadaException;

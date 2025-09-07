@@ -17,10 +17,15 @@ public class AuthenticationController {
 
     private final AuthenticationService service;
 
-    @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register(
+    @PostMapping("/register/comprador")
+    public ResponseEntity<AuthenticationResponse> registerComprador(
             @RequestBody RegisterRequest request) {
-        return ResponseEntity.ok(service.register(request));
+        return ResponseEntity.ok(service.registerComprador(request));
+    }
+    @PostMapping("/register/proveedor")
+    public ResponseEntity<AuthenticationResponse> registerProveedor(
+            @RequestBody RegisterRequest request) {
+        return ResponseEntity.ok(service.registerProveedor(request));
     }
 
     @PostMapping("/login")

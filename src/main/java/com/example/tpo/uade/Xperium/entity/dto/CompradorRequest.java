@@ -15,5 +15,5 @@ public class CompradorRequest {
 
     private String telefono;
 
-    private String contraseña;
+    private String contrasenia;
 }

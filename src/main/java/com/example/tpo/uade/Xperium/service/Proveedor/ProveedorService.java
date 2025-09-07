@@ -5,8 +5,6 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
-import com.example.tpo.uade.Xperium.entity.Categoria;
-import com.example.tpo.uade.Xperium.entity.Producto;
 import com.example.tpo.uade.Xperium.entity.Proveedor;
 import com.example.tpo.uade.Xperium.exceptions.CategoriaDuplicadaException;
 

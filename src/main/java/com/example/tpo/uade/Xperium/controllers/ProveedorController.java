@@ -7,49 +7,50 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.tpo.uade.Xperium.entity.Proveedor;
 import com.example.tpo.uade.Xperium.entity.dto.ProveedorRequest;
 import com.example.tpo.uade.Xperium.exceptions.CategoriaDuplicadaException;
+import com.example.tpo.uade.Xperium.repository.ProveedorRepository;
 import com.example.tpo.uade.Xperium.service.Proveedor.ProveedorService;
 
 @RestController
 @RequestMapping("proveedores")
 public class ProveedorController {
-    
-    // Inyección de dependencia del servicio de proveedor
+
     @Autowired
     private ProveedorService proveedorService;
 
-    // Endpoint para obtener todos los proveedores con paginación
-    @GetMapping
-    public ResponseEntity<Page<Proveedor>> getProveedor(  
-            @RequestParam(required = false) Integer page, // Página actual
-            @RequestParam(required = false) Integer size) // Tamaño de la página
-    {
-        if (page == null || size == null) { // Si no se especifica página o tamaño, retornar todos los proveedores
-            return ResponseEntity.ok(proveedorService.getProveedor(PageRequest.of(0, Integer.MAX_VALUE))); // Retorna todos los proveedores sin paginación
-        }
-        return ResponseEntity.ok(proveedorService.getProveedor(PageRequest.of(page, size))); // Retorna los proveedores con paginación
+    @Autowired
+    private ProveedorRepository proveedorRepository;
+
+    private Proveedor getAuthenticatedProveedor() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        return proveedorRepository.findByEmail(email)
+            .orElseThrow(() -> new RuntimeException("Proveedor no encontrado en el contexto de seguridad"));
     }
-    
+
+    @GetMapping("/micuenta")
+    public ResponseEntity<Proveedor> getCurrentProveedor() {
+        Proveedor proveedor = getAuthenticatedProveedor();
+        return ResponseEntity.ok(proveedor);
+    }
 
     @GetMapping("/{proveedorId}")
     public ResponseEntity<Proveedor> getProveedorById(@PathVariable Long proveedorId) {
+        Proveedor authenticatedProveedor = getAuthenticatedProveedor();
+        if (!proveedorId.equals(authenticatedProveedor.getId())) {
+            return ResponseEntity.status(403).build();
+        }
         Optional<Proveedor> resultado = proveedorService.getProveedorById(proveedorId);
         if (resultado.isPresent()) {
-            return ResponseEntity.ok(resultado.get()); // Retorna el proveedor encontrado
+            return ResponseEntity.ok(resultado.get());
         } else {
-            return ResponseEntity.notFound().build(); // Retorna 404 si no se encuentra el proveedor
+            return ResponseEntity.notFound().build();
         }
     }
 
@@ -57,12 +58,12 @@ public class ProveedorController {
     public ResponseEntity<Object> createProveedor(@RequestBody ProveedorRequest proveedorRequest) {
         try {
             Proveedor resultado = proveedorService.createProveedor(
-                proveedorRequest.getNombre(), 
-                proveedorRequest.getEmail(), 
-                proveedorRequest.getTelefono(), 
+                proveedorRequest.getNombre(),
+                proveedorRequest.getEmail(),
+                proveedorRequest.getTelefono(),
                 proveedorRequest.getContrasenia()
-            ); 
-            return ResponseEntity.created(URI.create("/proveedores/" + resultado.getId())).body(resultado); // Retorna 201 Created con la ubicación del nuevo proveedor
+            );
+            return ResponseEntity.created(URI.create("/proveedores/" + resultado.getId())).body(resultado);
         } catch (CategoriaDuplicadaException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -72,7 +73,11 @@ public class ProveedorController {
     public ResponseEntity<Object> updateProveedor(
             @PathVariable Long id,
             @RequestBody ProveedorRequest proveedorRequest) {
+        Proveedor authenticatedProveedor = getAuthenticatedProveedor();
         try {
+            if (!id.equals(authenticatedProveedor.getId())) {
+                return ResponseEntity.status(403).build();
+            }
             Proveedor updated = proveedorService.updateProveedor(
                 id,
                 proveedorRequest.getNombre(),
@@ -88,12 +93,16 @@ public class ProveedorController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteProveedor(@PathVariable Long id) {
+        Proveedor authenticatedProveedor = getAuthenticatedProveedor();
+        if (!id.equals(authenticatedProveedor.getId())) {
+            return ResponseEntity.status(403).build();
+        }
         Optional<Proveedor> proveedor = proveedorService.getProveedorById(id);
         if (proveedor.isPresent()) {
             proveedorService.deleteProveedor(id);
-            return ResponseEntity.noContent().build(); // 204 No Content
+            return ResponseEntity.noContent().build();
         } else {
-            return ResponseEntity.notFound().build(); // 404 Not Found
+            return ResponseEntity.notFound().build();
         }
     }
 }

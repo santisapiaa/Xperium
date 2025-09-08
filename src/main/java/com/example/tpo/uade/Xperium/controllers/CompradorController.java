@@ -37,7 +37,7 @@ public class CompradorController {
             .orElseThrow(() -> new RuntimeException("Comprador no encontrado en el contexto de seguridad"));
     }
 
-    @GetMapping
+    @GetMapping("/micuenta")
     public ResponseEntity<Comprador> getCurrentComprador() {
         Comprador comprador = getAuthenticatedComprador();
         return ResponseEntity.ok(comprador);

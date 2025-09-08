@@ -24,7 +24,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Proveedor implements UserDetails{
+public class Admin implements UserDetails {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -73,8 +73,9 @@ public class Proveedor implements UserDetails{
         return true;
     }
 
-	@Override
+    @Override
     public String getPassword() {
         return contrasenia;
     }
+    
 }

@@ -15,6 +15,8 @@ public interface CompradorService {
 
     Optional<Comprador> getCompradoresById(Long id);
 
+    Optional<Comprador> getCompradoresByEmail(String email);
+
     Comprador createComprador(String nombre, String apellido, String email, String telefono, String contrasenia) throws CategoriaDuplicadaException;
 
     void deleteComprador(Long id, Long authenticatedCompradorId) throws Exception;

@@ -7,7 +7,6 @@ import lombok.Data;
 @Data
 public class ProductoRequest {
 
-    @JsonIgnore
     private Long id;
     
     private String nombre;
@@ -26,10 +25,8 @@ public class ProductoRequest {
  
     private int cantPersonas;
 
-    @JsonIgnore
     private Long categoriaId;
     
-    @JsonIgnore
     private Long proveedorId;
 
     private int descuento;

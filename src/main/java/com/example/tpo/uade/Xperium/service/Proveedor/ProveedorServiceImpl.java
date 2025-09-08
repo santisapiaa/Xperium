@@ -28,6 +28,10 @@ public class ProveedorServiceImpl implements ProveedorService {
         return proveedorRepository.findById(id);
     }
 
+    public Optional<Proveedor> getProveedorByEmail(String email) {
+        return proveedorRepository.findByEmail(email);
+    }
+
     @Override
     public Proveedor createProveedor(String nombre, String email, String telefono, String contrasenia) throws CategoriaDuplicadaException{
         List<Proveedor> proveedor = proveedorRepository.findByNombre(nombre);

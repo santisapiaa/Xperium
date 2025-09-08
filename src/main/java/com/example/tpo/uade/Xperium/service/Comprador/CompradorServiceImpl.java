@@ -36,6 +36,11 @@ public class CompradorServiceImpl implements CompradorService {
     }
 
     @Override
+    public Optional<Comprador> getCompradoresByEmail(String email) {
+        return compradorRepository.findByEmail(email);
+    }
+
+    @Override
     public Comprador createComprador(String nombre, String apellido, String email, String telefono, String contrasenia) throws CategoriaDuplicadaException{
         Optional<Comprador> comprador = compradorRepository.findByEmail(email);
             if (comprador.isEmpty()) {

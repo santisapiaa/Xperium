@@ -72,7 +72,7 @@ public class OrdenDeCompraController {
 
     // Endpoint para crear una nueva orden de compra, asociándola al comprador autenticado
     @PostMapping
-    public ResponseEntity<Object> createOrdenDeCompra(@RequestBody OrdenDeCompraRequest ordenDeCompraRequest) {
+    public ResponseEntity<Object> createOrdenDeCompra() {
         try {
             Comprador comprador = getAuthenticatedComprador();
             LocalDate fecha = LocalDate.now();
@@ -87,8 +87,8 @@ public class OrdenDeCompraController {
 
             OrdenDeCompra resultado = ordenDeCompraService.createOrdenDeCompra(
                     fecha,
-                    ordenDeCompraRequest.getTotal(),
-                    ordenDeCompraRequest.getEstado(),
+                    0.0,
+                    "PENDIENTE",
                     comprador
             );
             return ResponseEntity.created(URI.create("/ordenesDeCompra/" + resultado.getId())).body(resultado);

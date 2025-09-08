@@ -22,37 +22,24 @@ public class SecurityConfig {
         private final JwtAuthenticationFilter jwtAuthFilter;
         private final AuthenticationProvider authenticationProvider;
 
-        /* @Bean
-        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-                http
-                                .csrf(AbstractHttpConfigurer::disable)
-                                .authorizeHttpRequests(req -> req
-                                                .requestMatchers("/auth/**").permitAll()
-                                                .requestMatchers("/productos/**").permitAll()
-                                                //.requestMatchers("/productos/**").hasAnyAuthority(Role.VENDEDOR.name())
-                                                .anyRequest().authenticated())
-                                .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
-                                .authenticationProvider(authenticationProvider)
-                                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-
-                return http.build();
-        }*/
-        
         @Bean
         public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
                 http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req -> req
-                        .requestMatchers("/auth/**").permitAll()
+                        
+                        .requestMatchers("/auth/**").permitAll()            
+                        .requestMatchers("/direcciones/**").hasRole("COMPRADOR")
                         .requestMatchers(HttpMethod.GET, "/productos/**").hasAnyAuthority("ROLE_COMPRADOR", "ROLE_VENDEDOR")
                         .requestMatchers(HttpMethod.POST, "/productos/**").hasAuthority("ROLE_VENDEDOR")
                         .requestMatchers(HttpMethod.PUT, "/productos/**").hasAuthority("ROLE_VENDEDOR")
                         .requestMatchers(HttpMethod.DELETE, "/productos/**").hasAuthority("ROLE_VENDEDOR")
                         .requestMatchers("/productos/**").hasAnyAuthority("ROLE_VENDEDOR")
-                        .requestMatchers("/direcciones/**").hasAnyAuthority("ROLE_COMPRADOR")
                         .requestMatchers("/ordenesDeCompra/**").hasAnyAuthority("ROLE_COMPRADOR")
                         .requestMatchers("/detallesOrdenDeCompra/**").hasAnyAuthority("ROLE_COMPRADOR")
                         .requestMatchers(HttpMethod.GET, "/categorias/**").hasAnyAuthority("ROLE_VENDEDOR", "ROLE_COMPRADOR")
+                        .requestMatchers("/categorias/**").denyAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider)

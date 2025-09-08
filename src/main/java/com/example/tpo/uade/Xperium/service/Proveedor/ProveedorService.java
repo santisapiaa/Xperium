@@ -14,6 +14,8 @@ public interface ProveedorService {
 
     public Optional<Proveedor> getProveedorById(Long id);
 
+    public Optional<Proveedor> getProveedorByEmail(String email);
+
     public Proveedor createProveedor(String nombre, String email, String telefono, String contrasenia) throws CategoriaDuplicadaException;
     
     public void deleteProveedor(Long id);

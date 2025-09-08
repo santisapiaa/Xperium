@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.example.tpo.uade.Xperium.repository.AdminRepository;
 import com.example.tpo.uade.Xperium.repository.CompradorRepository;
 import com.example.tpo.uade.Xperium.repository.ProveedorRepository;
 
@@ -22,6 +23,7 @@ public class ApplicationConfig {
     
     private final ProveedorRepository proveedorRepository;
     private final CompradorRepository compradorRepository;
+    private final AdminRepository adminRepository;
 
     @Bean
     public UserDetailsService userDetailsService() {
@@ -30,9 +32,13 @@ public class ApplicationConfig {
             if (proveedor.isPresent()) {
                 return proveedor.get();
             }
-            var comprador = compradorRepository.findByEmail(username)
+            var comprador = compradorRepository.findByEmail(username);
+            if (comprador.isPresent()) {
+                return comprador.get();
+            }
+            var admin = adminRepository.findByEmail(username)
                     .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
-            return comprador;
+            return admin;
         };
     }
 

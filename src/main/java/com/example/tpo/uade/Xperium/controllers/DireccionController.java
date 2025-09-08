@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import com.example.tpo.uade.Xperium.entity.Comprador;
 import com.example.tpo.uade.Xperium.entity.Direccion;
 import com.example.tpo.uade.Xperium.entity.dto.DireccionRequest;
-import com.example.tpo.uade.Xperium.exceptions.CategoriaDuplicadaException;
 import com.example.tpo.uade.Xperium.repository.CompradorRepository;
 import com.example.tpo.uade.Xperium.service.Direccion.DireccionService;
 
@@ -61,25 +60,28 @@ public class DireccionController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> createDireccion(@RequestBody DireccionRequest direccionRequest)
-            throws CategoriaDuplicadaException {
-        Comprador comprador = getAuthenticatedComprador();
-        Direccion resultado = direccionService.createDireccion(
-            direccionRequest.getCalle(),
-            direccionRequest.getNumero(),
-            direccionRequest.getDepartamento(),
-            direccionRequest.getCodigoPostal(),
-            comprador
-        );
-        return ResponseEntity.created(URI.create("/direcciones/" + resultado.getId())).body(resultado);
+    public ResponseEntity<Object> createDireccion(@RequestBody DireccionRequest direccionRequest) {
+        try {
+            Comprador comprador = getAuthenticatedComprador();
+            Direccion resultado = direccionService.createDireccion(
+                direccionRequest.getCalle(),
+                direccionRequest.getNumero(),
+                direccionRequest.getDepartamento(),
+                direccionRequest.getCodigoPostal(),
+                comprador
+            );
+            return ResponseEntity.created(URI.create("/direcciones/" + resultado.getId())).body(resultado);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Direccion> updateDireccion(
+    public ResponseEntity<Object> updateDireccion(
             @PathVariable Long id,
             @RequestBody DireccionRequest direccionRequest) {
-        Comprador comprador = getAuthenticatedComprador();
         try {
+            Comprador comprador = getAuthenticatedComprador();
             Direccion updated = direccionService.updateDireccion(
                 id,
                 comprador.getId(),
@@ -90,18 +92,18 @@ public class DireccionController {
             );
             return ResponseEntity.ok(updated);
         } catch (Exception e) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteDireccion(@PathVariable Long id) {
-        Comprador comprador = getAuthenticatedComprador();
+    public ResponseEntity<Object> deleteDireccion(@PathVariable Long id) {
         try {
+            Comprador comprador = getAuthenticatedComprador();
             direccionService.deleteDireccionByIdAndCompradorId(id, comprador.getId());
             return ResponseEntity.noContent().build();
         } catch (Exception e) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 }

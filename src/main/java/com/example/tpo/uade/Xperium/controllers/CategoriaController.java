@@ -1,28 +1,26 @@
 package com.example.tpo.uade.Xperium.controllers;
 
+import java.net.URI;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.tpo.uade.Xperium.entity.Categoria;
 import com.example.tpo.uade.Xperium.entity.dto.CategoriaRequest;
 import com.example.tpo.uade.Xperium.exceptions.CategoriaDuplicadaException;
 import com.example.tpo.uade.Xperium.service.Categoria.CategoriaService;
-
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.http.ResponseEntity;
-
-import java.net.URI;
 
 @RestController
 @RequestMapping("categorias")
@@ -55,15 +53,17 @@ public class CategoriaController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> createCategoria(@RequestBody CategoriaRequest categoriaRequest)
-            throws CategoriaDuplicadaException {
-        // Crea una nueva categoría
-        Categoria resultado = categoriaService.createCategoria(categoriaRequest.getDescripcion(), categoriaRequest.getImagenUrl()); 
-        return ResponseEntity.created(URI.create("/categorias/" + resultado.getId())).body(resultado); // Retorna 201 Created con la ubicación de la nueva categoría
+    public ResponseEntity<Object> createCategoria(@RequestBody CategoriaRequest categoriaRequest) {
+        try {
+            Categoria resultado = categoriaService.createCategoria(categoriaRequest.getDescripcion(), categoriaRequest.getImagenUrl()); 
+            return ResponseEntity.created(URI.create("/categorias/" + resultado.getId())).body(resultado); // Retorna 201 Created con la ubicación de la nueva categoría
+        } catch (CategoriaDuplicadaException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Categoria> updateCategoria(
+    public ResponseEntity<Object> updateCategoria(
             @PathVariable Long id,
             @RequestBody CategoriaRequest categoriaRequest) {
         try {
@@ -74,12 +74,12 @@ public class CategoriaController {
             );
             return ResponseEntity.ok(updated);
         } catch (Exception e) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCategoria(@PathVariable Long id) {
+    public ResponseEntity<Object> deleteCategoria(@PathVariable Long id) {
         Optional<Categoria> categoria = categoriaService.getCategoriasById(id);
         if (categoria.isPresent()) {
             categoriaService.deleteCategoria(id);

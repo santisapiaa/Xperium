@@ -26,20 +26,20 @@ import com.example.tpo.uade.Xperium.service.Proveedor.ProveedorService;
 @RequestMapping("proveedores")
 public class ProveedorController {
     
-    // Inyección de dependencia del servicio de categoría
+    // Inyección de dependencia del servicio de proveedor
     @Autowired
     private ProveedorService proveedorService;
 
-    // Endpoint para obtener todas las categorias con paginación
+    // Endpoint para obtener todos los proveedores con paginación
     @GetMapping
     public ResponseEntity<Page<Proveedor>> getProveedor(  
             @RequestParam(required = false) Integer page, // Página actual
             @RequestParam(required = false) Integer size) // Tamaño de la página
     {
-        if (page == null || size == null) { // Si no se especifica página o tamaño, retornar todas las categorías
-            return ResponseEntity.ok(proveedorService.getProveedor(PageRequest.of(0, Integer.MAX_VALUE))); // Retorna todas las categorías sin paginación
+        if (page == null || size == null) { // Si no se especifica página o tamaño, retornar todos los proveedores
+            return ResponseEntity.ok(proveedorService.getProveedor(PageRequest.of(0, Integer.MAX_VALUE))); // Retorna todos los proveedores sin paginación
         }
-        return ResponseEntity.ok(proveedorService.getProveedor(PageRequest.of(page, size))); // Retorna las categorías con paginación
+        return ResponseEntity.ok(proveedorService.getProveedor(PageRequest.of(page, size))); // Retorna los proveedores con paginación
     }
     
 
@@ -47,21 +47,29 @@ public class ProveedorController {
     public ResponseEntity<Proveedor> getProveedorById(@PathVariable Long proveedorId) {
         Optional<Proveedor> resultado = proveedorService.getProveedorById(proveedorId);
         if (resultado.isPresent()) {
-            return ResponseEntity.ok(resultado.get()); // Retorna la categoría encontrada
+            return ResponseEntity.ok(resultado.get()); // Retorna el proveedor encontrado
         } else {
-            return ResponseEntity.notFound().build(); // Retorna 404 si no se encuentra la categoría
+            return ResponseEntity.notFound().build(); // Retorna 404 si no se encuentra el proveedor
         }
     }
 
     @PostMapping
-    public ResponseEntity<Object> createProveedor(@RequestBody ProveedorRequest proveedorRequest)
-            throws CategoriaDuplicadaException {
-        Proveedor resultado = proveedorService.createProveedor(proveedorRequest.getNombre(), proveedorRequest.getEmail(), proveedorRequest.getTelefono(), proveedorRequest.getContrasenia()); 
-        return ResponseEntity.created(URI.create("/proveedores/" + resultado.getId())).body(resultado); // Retorna 201 Created con la ubicación de la nueva categoría
+    public ResponseEntity<Object> createProveedor(@RequestBody ProveedorRequest proveedorRequest) {
+        try {
+            Proveedor resultado = proveedorService.createProveedor(
+                proveedorRequest.getNombre(), 
+                proveedorRequest.getEmail(), 
+                proveedorRequest.getTelefono(), 
+                proveedorRequest.getContrasenia()
+            ); 
+            return ResponseEntity.created(URI.create("/proveedores/" + resultado.getId())).body(resultado); // Retorna 201 Created con la ubicación del nuevo proveedor
+        } catch (CategoriaDuplicadaException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Proveedor> updateProveedor(
+    public ResponseEntity<Object> updateProveedor(
             @PathVariable Long id,
             @RequestBody ProveedorRequest proveedorRequest) {
         try {
@@ -74,12 +82,12 @@ public class ProveedorController {
             );
             return ResponseEntity.ok(updated);
         } catch (Exception e) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProveedor(@PathVariable Long id) {
+    public ResponseEntity<Object> deleteProveedor(@PathVariable Long id) {
         Optional<Proveedor> proveedor = proveedorService.getProveedorById(id);
         if (proveedor.isPresent()) {
             proveedorService.deleteProveedor(id);

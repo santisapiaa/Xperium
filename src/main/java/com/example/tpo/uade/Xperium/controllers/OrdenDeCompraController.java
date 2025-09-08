@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.tpo.uade.Xperium.entity.Comprador;
 import com.example.tpo.uade.Xperium.entity.OrdenDeCompra;
 import com.example.tpo.uade.Xperium.entity.dto.OrdenDeCompraRequest;
-import com.example.tpo.uade.Xperium.exceptions.CategoriaDuplicadaException;
 import com.example.tpo.uade.Xperium.repository.CompradorRepository;
 import com.example.tpo.uade.Xperium.service.OrdenDeCompra.OrdenDeCompraService;
 
@@ -73,43 +72,50 @@ public class OrdenDeCompraController {
 
     // Endpoint para crear una nueva orden de compra, asociándola al comprador autenticado
     @PostMapping
-    public ResponseEntity<Object> createOrdenDeCompra()
-            throws CategoriaDuplicadaException {
-        Comprador comprador = getAuthenticatedComprador();
-        LocalDate fecha = LocalDate.now();
+    public ResponseEntity<Object> createOrdenDeCompra(@RequestBody OrdenDeCompraRequest ordenDeCompraRequest) {
+        try {
+            Comprador comprador = getAuthenticatedComprador();
+            LocalDate fecha = LocalDate.now();
 
-        // Verificar si hay órdenes pendientes
-        Page<OrdenDeCompra> ordenesPendientes = ordenDeCompraService.getOrdenesDeCompraByCompradorId(comprador.getId(), PageRequest.of(0, Integer.MAX_VALUE));
-        for (OrdenDeCompra orden : ordenesPendientes) {
-            if ("PENDIENTE".equals(orden.getEstado())) {
-                return ResponseEntity.badRequest().body("Ya tienes una orden pendiente. Finalizala antes de crear una nueva.");
+            // Verificar si hay órdenes pendientes
+            Page<OrdenDeCompra> ordenesPendientes = ordenDeCompraService.getOrdenesDeCompraByCompradorId(comprador.getId(), PageRequest.of(0, Integer.MAX_VALUE));
+            for (OrdenDeCompra orden : ordenesPendientes) {
+                if ("PENDIENTE".equals(orden.getEstado())) {
+                    return ResponseEntity.badRequest().body("Ya tienes una orden pendiente. Finalizala antes de crear una nueva.");
+                }
             }
-        }
 
-        OrdenDeCompra resultado = ordenDeCompraService.createOrdenDeCompra(
-                fecha,
-                0.0,
-                "PENDIENTE",
-                comprador
-        );
-        return ResponseEntity.created(URI.create("/ordenesDeCompra/" + resultado.getId())).body(resultado);
+            OrdenDeCompra resultado = ordenDeCompraService.createOrdenDeCompra(
+                    fecha,
+                    ordenDeCompraRequest.getTotal(),
+                    ordenDeCompraRequest.getEstado(),
+                    comprador
+            );
+            return ResponseEntity.created(URI.create("/ordenesDeCompra/" + resultado.getId())).body(resultado);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     // Endpoint para finalizar una orden de compra
     @PutMapping("/{ordenDeCompraId}/finalizar")
     public ResponseEntity<Object> finalizeOrdenDeCompra(@PathVariable Long ordenDeCompraId) {
-        Comprador comprador = getAuthenticatedComprador();
-        Optional<OrdenDeCompra> ordenOpt = ordenDeCompraService.getOrdenesDeCompraByIdAndCompradorId(ordenDeCompraId, comprador.getId());
-        if (ordenOpt.isPresent()) {
-            OrdenDeCompra orden = ordenOpt.get();
-            if ("PENDIENTE".equals(orden.getEstado()) && orden.getTotal() > 0) {
-                orden = ordenDeCompraService.finalizeOrdenDeCompra(ordenDeCompraId);
-                return ResponseEntity.ok(orden);
+        try {
+            Comprador comprador = getAuthenticatedComprador();
+            Optional<OrdenDeCompra> ordenOpt = ordenDeCompraService.getOrdenesDeCompraByIdAndCompradorId(ordenDeCompraId, comprador.getId());
+            if (ordenOpt.isPresent()) {
+                OrdenDeCompra orden = ordenOpt.get();
+                if ("PENDIENTE".equals(orden.getEstado()) && orden.getTotal() > 0) {
+                    orden = ordenDeCompraService.finalizeOrdenDeCompra(ordenDeCompraId);
+                    return ResponseEntity.ok(orden);
+                } else {
+                    return ResponseEntity.badRequest().body("La orden no está en estado PENDIENTE o no tiene productos agregados.");
+                }
             } else {
-                return ResponseEntity.badRequest().body("La orden no está en estado PENDIENTE o no tiene productos agregados.");
+                return ResponseEntity.notFound().build();
             }
-        } else {
-            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 }

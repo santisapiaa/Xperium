@@ -52,6 +52,7 @@ public class SecurityConfig {
                         .requestMatchers("/direcciones/**").hasAnyAuthority("ROLE_COMPRADOR")
                         .requestMatchers("/ordenesDeCompra/**").hasAnyAuthority("ROLE_COMPRADOR")
                         .requestMatchers("/detallesOrdenDeCompra/**").hasAnyAuthority("ROLE_COMPRADOR")
+                        .requestMatchers(HttpMethod.GET, "/categorias/**").hasAnyAuthority("ROLE_VENDEDOR", "ROLE_COMPRADOR")
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider)

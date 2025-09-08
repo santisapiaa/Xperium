@@ -25,21 +25,25 @@ public class CompradorServiceImpl implements CompradorService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    // metodo para obtener todos los compradores con paginacion
     @Override
     public Page<Comprador> getCompradores(PageRequest pageRequest) {
         return compradorRepository.findAll(pageRequest);
     }
 
+    // metodo para obtener un comprador por id
     @Override
     public Optional<Comprador> getCompradoresById(Long id) {
         return compradorRepository.findById(id);
     }
 
+    // metodo para obtener un comprador por email
     @Override
     public Optional<Comprador> getCompradoresByEmail(String email) {
         return compradorRepository.findByEmail(email);
     }
 
+    // metodo para crear un comprador
     @Override
     public Comprador createComprador(String nombre, String apellido, String email, String telefono, String contrasenia) throws CategoriaDuplicadaException{
         Optional<Comprador> comprador = compradorRepository.findByEmail(email);
@@ -57,6 +61,7 @@ public class CompradorServiceImpl implements CompradorService {
             throw new CategoriaDuplicadaException();
     }
 
+    // metodo para eliminar un comprador por id
     @Override
     public void deleteComprador(Long id, Long authenticatedCompradorId) throws Exception {
         if (!id.equals(authenticatedCompradorId)) {
@@ -70,6 +75,7 @@ public class CompradorServiceImpl implements CompradorService {
         }
     }
 
+    // metodo para actualizar un comprador
     @Override
     public Comprador updateComprador(Long id, Long authenticatedCompradorId, String nombre, String apellido, String email, String telefono) throws Exception {
         if (!id.equals(authenticatedCompradorId)) {
@@ -88,6 +94,7 @@ public class CompradorServiceImpl implements CompradorService {
         return compradorRepository.save(comprador);
     }
 
+    // metodo para buscar un comprador por email
     @Override
     public Optional<Comprador> findByEmail(String email) {
         return compradorRepository.findByEmail(email);

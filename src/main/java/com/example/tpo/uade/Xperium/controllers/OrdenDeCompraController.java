@@ -36,6 +36,7 @@ public class OrdenDeCompraController {
     private CompradorRepository compradorRepository;
 
     // Método para obtener el Comprador autenticado
+
     private Comprador getAuthenticatedComprador() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
@@ -44,6 +45,7 @@ public class OrdenDeCompraController {
     }
 
     // Endpoint para obtener las órdenes de compra del comprador autenticado con paginación
+
     @GetMapping
     public ResponseEntity<Page<OrdenDeCompra>> getOrdenesDeCompra(
             @RequestParam(required = false) Integer page,
@@ -59,6 +61,7 @@ public class OrdenDeCompraController {
     }
 
     // Endpoint para obtener una orden de compra específica por ID, verificando que pertenezca al comprador autenticado
+
     @GetMapping("/{ordenDeCompraId}")
     public ResponseEntity<OrdenDeCompra> getOrdenesDeCompraById(@PathVariable Long ordenDeCompraId) {
         Comprador comprador = getAuthenticatedComprador();
@@ -71,6 +74,7 @@ public class OrdenDeCompraController {
     }
 
     // Endpoint para crear una nueva orden de compra, asociándola al comprador autenticado
+
     @PostMapping
     public ResponseEntity<Object> createOrdenDeCompra() {
         try {
@@ -98,6 +102,7 @@ public class OrdenDeCompraController {
     }
 
     // Endpoint para finalizar una orden de compra
+    
     @PutMapping("/{ordenDeCompraId}/finalizar")
     public ResponseEntity<Object> finalizeOrdenDeCompra(@PathVariable Long ordenDeCompraId) {
         try {

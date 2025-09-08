@@ -34,15 +34,12 @@ public class JwtService {
             .subject(userDetails.getUsername())
             .issuedAt(new Date(System.currentTimeMillis()))
             .expiration(new Date(System.currentTimeMillis() + expiration))
-            // Guardar roles como claim adicional
             .claim("roles", userDetails.getAuthorities().stream()
                     .map(GrantedAuthority::getAuthority)
                     .toList())
             .signWith(getSecretKey())
             .compact();
-}
-
-    
+    }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String username = extractClaim(token, Claims::getSubject);

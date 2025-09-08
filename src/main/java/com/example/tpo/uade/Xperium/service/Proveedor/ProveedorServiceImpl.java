@@ -18,20 +18,24 @@ public class ProveedorServiceImpl implements ProveedorService {
 
     @Autowired
     private ProveedorRepository proveedorRepository;
-
+    
+    // metodo para obtener todos los proveedores con paginacion
     public Page<Proveedor> getProveedor(PageRequest pageRequest) {
         return proveedorRepository.findAll(pageRequest);
     }
 
+    // metodo para obtener un proveedor por id
     @Override
     public Optional<Proveedor> getProveedorById(Long id) {
         return proveedorRepository.findById(id);
     }
 
+    // metodo para obtener un proveedor por email
     public Optional<Proveedor> getProveedorByEmail(String email) {
         return proveedorRepository.findByEmail(email);
     }
 
+    // metodo para crear un proveedor
     @Override
     public Proveedor createProveedor(String nombre, String email, String telefono, String contrasenia) throws CategoriaDuplicadaException{
         List<Proveedor> proveedor = proveedorRepository.findByNombre(nombre);
@@ -48,11 +52,13 @@ public class ProveedorServiceImpl implements ProveedorService {
             throw new CategoriaDuplicadaException();
     }
 
+    // metodo para eliminar un proveedor por id
     @Override
     public void deleteProveedor(Long id) {
         proveedorRepository.deleteById(id);
     }
 
+    // metodo para actualizar un proveedor
     public Proveedor updateProveedor(Long id, String nombre, String email, String telefono, String contrasenia) throws Exception {
         Proveedor proveedor = proveedorRepository.findById(id)
             .orElseThrow(() -> new Exception("Proveedor no encontrado"));

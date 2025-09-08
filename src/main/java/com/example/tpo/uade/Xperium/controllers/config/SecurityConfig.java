@@ -26,8 +26,7 @@ public class SecurityConfig {
         public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
                 http
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(req -> req
-                        
+                .authorizeHttpRequests(req -> req  
                         .requestMatchers("/auth/**").permitAll()            
                         .requestMatchers("/direcciones/**").hasRole("COMPRADOR")
                         .requestMatchers(HttpMethod.GET, "/productos/**").hasAnyAuthority("ROLE_COMPRADOR", "ROLE_VENDEDOR")
@@ -37,8 +36,8 @@ public class SecurityConfig {
                         .requestMatchers("/productos/**").hasAnyAuthority("ROLE_VENDEDOR")
                         .requestMatchers("/ordenesDeCompra/**").hasAnyAuthority("ROLE_COMPRADOR")
                         .requestMatchers("/detallesOrdenDeCompra/**").hasAnyAuthority("ROLE_COMPRADOR")
-                        .requestMatchers(HttpMethod.GET, "/categorias/**").hasAnyAuthority("ROLE_VENDEDOR", "ROLE_COMPRADOR")
-                        .requestMatchers("/categorias/**").denyAll()
+                        .requestMatchers(HttpMethod.GET, "/categorias/**").hasAnyAuthority("ROLE_VENDEDOR", "ROLE_COMPRADOR","ROLE_ADMIN")
+                        .requestMatchers("/categorias/**").hasRole("ADMIN")
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))

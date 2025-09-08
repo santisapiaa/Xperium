@@ -18,21 +18,25 @@ public class DireccionServiceImpl implements DireccionService {
     @Autowired
     private DireccionRepository direccionRepository;
 
+    // metodo para obtener direcciones por compradorId con paginacion
     @Override
     public Page<Direccion> getDireccionesByCompradorId(Long compradorId, PageRequest pageRequest) {
         return direccionRepository.findByCompradorId(compradorId, pageRequest);
     }
 
+    // metodo para obtener una direccion por id y compradorId
     @Override
     public Optional<Direccion> getDireccionesByIdAndCompradorId(Long id, Long compradorId) {
         return direccionRepository.findByIdAndCompradorId(id, compradorId);
     }
 
+    // metodo para crear una direccion
     @Override
     public Direccion createDireccion(String calle, String numero, String departamento, String codigoPostal, Comprador comprador) throws CategoriaDuplicadaException {
         return direccionRepository.save(new Direccion(calle, numero, departamento, codigoPostal, comprador));
     }
 
+    // metodo para eliminar una direccion por id y compradorId
     @Override
     public void deleteDireccionByIdAndCompradorId(Long id, Long compradorId) throws Exception {
         Optional<Direccion> direccion = direccionRepository.findByIdAndCompradorId(id, compradorId);
@@ -43,6 +47,7 @@ public class DireccionServiceImpl implements DireccionService {
         }
     }
 
+    // metodo para actualizar una direccion por id y compradorId
     @Override
     public Direccion updateDireccion(Long id, Long compradorId, String calle, String numero, String departamento, String codigoPostal) throws Exception {
         Direccion direccion = direccionRepository.findByIdAndCompradorId(id, compradorId)

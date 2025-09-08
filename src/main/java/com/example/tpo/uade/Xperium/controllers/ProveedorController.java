@@ -27,6 +27,8 @@ public class ProveedorController {
     @Autowired
     private ProveedorRepository proveedorRepository;
 
+    // Método para obtener el Proveedor autenticado
+
     private Proveedor getAuthenticatedProveedor() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
@@ -34,11 +36,15 @@ public class ProveedorController {
             .orElseThrow(() -> new RuntimeException("Proveedor no encontrado en el contexto de seguridad"));
     }
 
+    // Endpoint para obtener PROVEEDOR autenticado
+
     @GetMapping("/micuenta")
     public ResponseEntity<Proveedor> getCurrentProveedor() {
         Proveedor proveedor = getAuthenticatedProveedor();
         return ResponseEntity.ok(proveedor);
     }
+
+    // Endpoint para obtener PROVEEDOR por ID
 
     @GetMapping("/{proveedorId}")
     public ResponseEntity<Proveedor> getProveedorById(@PathVariable Long proveedorId) {
@@ -54,6 +60,8 @@ public class ProveedorController {
         }
     }
 
+    // Endpoint para crear PROVEEDOR
+
     @PostMapping
     public ResponseEntity<Object> createProveedor(@RequestBody ProveedorRequest proveedorRequest) {
         try {
@@ -68,6 +76,8 @@ public class ProveedorController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    // Endpoint para actualizar PROVEEDOR
 
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateProveedor(
@@ -91,6 +101,8 @@ public class ProveedorController {
         }
     }
 
+    // Endpoint para eliminar PROVEEDOR
+    
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteProveedor(@PathVariable Long id) {
         Proveedor authenticatedProveedor = getAuthenticatedProveedor();

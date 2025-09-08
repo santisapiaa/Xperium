@@ -29,18 +29,24 @@ public class AdminController {
     @Autowired
     private AdminRepository adminRepository;
 
+    // Método para obtener el Admin autenticado
+
     private Admin getAuthenticatedAdmin() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
         return adminRepository.findByEmail(email)
             .orElseThrow(() -> new RuntimeException("Admin no encontrado en el contexto de seguridad"));
     }
+    
+    // Endpoint para obtener ADMIN autenticado
 
     @GetMapping("/micuenta")
     public ResponseEntity<Admin> getCurrentAdmin() {
         Admin admin = getAuthenticatedAdmin();
         return ResponseEntity.ok(admin);
     }
+
+    //Endpoint para obtener ADMIN por ID
 
     @GetMapping("/{adminId}")
     public ResponseEntity<Admin> getAdminById(@PathVariable Long adminId) {
@@ -55,6 +61,8 @@ public class AdminController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    // Endpoint para crear ADMIN
 
     @PostMapping
     public ResponseEntity<Object> createAdmin(@RequestBody AdminRequest adminRequest) {
@@ -71,6 +79,8 @@ public class AdminController {
         }
     }
 
+    // Endpoint para actualizar ADMIN
+
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateAdmin(
             @PathVariable Long id,
@@ -84,7 +94,6 @@ public class AdminController {
                 adminRequest.getTelefono(),
                 adminRequest.getContrasenia()
             );
-            // Solo permite que el admin autenticado actualice su propio usuario
             if (!id.equals(authenticatedAdmin.getId())) {
                 return ResponseEntity.status(403).build();
             }
@@ -93,6 +102,8 @@ public class AdminController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    // Endpoint para eliminar ADMIN
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteAdmin(@PathVariable Long id) {
@@ -109,7 +120,7 @@ public class AdminController {
         }
     }
 
-    // Endpoints adicionales para métodos de admin en un negocio como BigBox
+    // Endpoint para leer proveedores 
 
     @GetMapping("/proveedores")
     public ResponseEntity<Page<Proveedor>> getAllProveedores(
@@ -122,6 +133,8 @@ public class AdminController {
         }
         return ResponseEntity.ok(adminService.getProveedores(PageRequest.of(page, size)));
     }
+
+    // Endpoint para leer proveedor por email
 
     @GetMapping("/proveedores/{email}")
     public ResponseEntity<Proveedor> getProveedorByEmail(
@@ -136,6 +149,8 @@ public class AdminController {
         }
     }
 
+    // Endpoint para leer compradores
+
     @GetMapping("/compradores")
     public ResponseEntity<Page<Comprador>> getCompradores(
             @RequestParam(required = false) Integer page,
@@ -147,6 +162,8 @@ public class AdminController {
         }
         return ResponseEntity.ok(adminService.getCompradores(PageRequest.of(page, size)));
     }
+
+    // Endpoint para leer comprador por email
 
     @GetMapping("/compradores/{email}")
     public ResponseEntity<Comprador> getCompradoresByEmail(

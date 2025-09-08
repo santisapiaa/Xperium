@@ -31,6 +31,7 @@ public class CategoriaController {
     private CategoriaService categoriaService;
 
     // Endpoint para obtener todas las categorias con paginación
+    
     @GetMapping
     public ResponseEntity<Page<Categoria>> getCategorias(  
             @RequestParam(required = false) Integer page, // Página actual
@@ -41,6 +42,8 @@ public class CategoriaController {
         }
         return ResponseEntity.ok(categoriaService.getCategorias(PageRequest.of(page, size))); // Retorna las categorías con paginación
     }
+
+    // Endpoint para obtener una categoría por su ID
 
     @GetMapping("/{categoriaId}")
     public ResponseEntity<Categoria> getCategoriaById(@PathVariable Long categoriaId) {
@@ -62,6 +65,8 @@ public class CategoriaController {
         }
     }
 
+    // Endpoint para actualizar una categoría 
+
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateCategoria(
             @PathVariable Long id,
@@ -77,6 +82,8 @@ public class CategoriaController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    // Endpoint para eliminar una categoría por su ID
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteCategoria(@PathVariable Long id) {

@@ -22,14 +22,17 @@ public class DetalleOrdenDeCompraServiceImpl implements DetalleOrdenDeCompraServ
     @Autowired
     private OrdenDeCompraRepository ordenDeCompraRepository;
 
+    // metodo para obtener todos los detalles de orden de compra con paginacion
     public Page<DetalleOrdenDeCompra> getDetallesOrdenDeCompra(PageRequest pageRequest) {
         return detalleOrdenDeCompraRepository.findAll(pageRequest);
     }
 
+    // metodo para obtener un detalle de orden de compra por id
     public Optional<DetalleOrdenDeCompra> getDetallesOrdenDeCompraById(Long id) {
         return detalleOrdenDeCompraRepository.findById(id);
     }
 
+    // metodo para crear un detalle de orden de compra
     public DetalleOrdenDeCompra createDetalleOrdenDeCompra(int cantidad, double precioUnitario, Producto producto, OrdenDeCompra ordenDeCompra) throws CategoriaDuplicadaException{
         DetalleOrdenDeCompra detalle = new DetalleOrdenDeCompra(cantidad, precioUnitario, producto, ordenDeCompra);
         DetalleOrdenDeCompra guardado = detalleOrdenDeCompraRepository.save(detalle);
@@ -42,6 +45,8 @@ public class DetalleOrdenDeCompraServiceImpl implements DetalleOrdenDeCompraServ
         return guardado;
     }
 
+    // metodo para eliminar un detalle de orden de compra por id
+     @Override
     public void deleteDetalleOrdenDeCompra(Long id) {
         detalleOrdenDeCompraRepository.deleteById(id);
     }

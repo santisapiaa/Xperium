@@ -34,6 +34,8 @@ public class DetalleOrdenDeCompraController {
     @Autowired
     private OrdenDeCompraRepository ordenDeCompraRepository;
 
+    // Endpoint para obtener todos los detalles de orden de compra con paginación
+
     @GetMapping
     public ResponseEntity<Page<DetalleOrdenDeCompra>> getDetallesOrdenDeCompra(
         @RequestParam(required = false) Integer page,
@@ -45,6 +47,7 @@ public class DetalleOrdenDeCompraController {
         return ResponseEntity.ok(detalleOrdenDeCompraService.getDetallesOrdenDeCompra(PageRequest.of(page, size)));
     }
 
+    // Endpoint para obtener DetalleOrdenDeCompra por ID
     @GetMapping("/{detalleOrdenDeCompraId}")
     public ResponseEntity<DetalleOrdenDeCompra> getDetalleOrdenDeCompraById(@PathVariable Long detalleOrdenDeCompraId) {
         Optional<DetalleOrdenDeCompra> resultado = detalleOrdenDeCompraService.getDetallesOrdenDeCompraById(detalleOrdenDeCompraId);
@@ -54,6 +57,8 @@ public class DetalleOrdenDeCompraController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    // Endpoint para crear DetalleOrdenDeCompra
 
     @PostMapping
     public ResponseEntity<Object> createDetalleOrdenDeCompra(@RequestBody DetalleOrdenDeCompraRequest detalleOrdenDeCompraRequest) {

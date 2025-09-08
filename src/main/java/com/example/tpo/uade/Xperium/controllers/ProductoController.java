@@ -34,12 +34,16 @@ public class ProductoController {
     @Autowired
     private ProveedorRepository proveedorRepository;
 
+    // Método para obtener el Proveedor autenticado
+
     private Proveedor getAuthenticatedProveedor() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
         return proveedorRepository.findByEmail(email)
             .orElseThrow(() -> new RuntimeException("Proveedor no encontrado en el contexto de seguridad"));
     }
+
+    // Endpoint para obtener PRODUCTOS con paginación
 
     @GetMapping
     public ResponseEntity<Page<ProductoRequest>> getProducto(
@@ -71,6 +75,7 @@ public class ProductoController {
         return ResponseEntity.ok(productoRequestPage);
     }
 
+    // Endpoint para obtener PRODUCTOS por CATEGORIA con paginación
 
     @GetMapping("/{categoriaId}/categoria")
     public ResponseEntity<Page<ProductoRequest>> getProductoByCategoryId(
@@ -110,6 +115,7 @@ public class ProductoController {
         return ResponseEntity.ok(productoRequestPage);
     }
 
+    // Endpoint para obtener PRODUCTOS del PROVEEDOR autenticado con paginación
 
     @GetMapping("/misproductos")
     public ResponseEntity<Page<ProductoRequest>> getMisProducto(
@@ -142,6 +148,8 @@ public class ProductoController {
         return ResponseEntity.ok(productoRequestPage);
     }
 
+    // Endpoint para obtener PRODUCTO por ID del PROVEEDOR autenticado
+
     @GetMapping("/{productoId}")
     public ResponseEntity<ProductoRequest> getProductoById(@PathVariable Long productoId) {
         Proveedor proveedor = getAuthenticatedProveedor();
@@ -166,6 +174,8 @@ public class ProductoController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    // Endpoint para crear PRODUCTO asociado al PROVEEDOR autenticado
 
     @PostMapping
     public ResponseEntity<Object> createProducto(@RequestBody ProductoRequest productoRequest) {
@@ -194,6 +204,8 @@ public class ProductoController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Ya existe un producto con este nombre.");
         }
     }
+
+    // Endpoint para actualizar PRODUCTO del PROVEEDOR autenticado
 
     @PutMapping("/{id}")
     public ResponseEntity<ProductoRequest> updateProducto(
@@ -237,6 +249,8 @@ public class ProductoController {
         }
     }
 
+    // Endpoint para actualizar DESCUENTO del PRODUCTO del PROVEEDOR autenticado
+
     @PutMapping("/descuento/{id}")
     public ResponseEntity<ProductoRequest> updateDescuento(
         @PathVariable Long id,
@@ -262,6 +276,8 @@ public class ProductoController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    // Endpoint para eliminar PRODUCTO del PROVEEDOR autenticado
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProducto(@PathVariable Long id) {

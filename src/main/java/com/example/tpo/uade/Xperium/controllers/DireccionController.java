@@ -34,6 +34,8 @@ public class DireccionController {
             .orElseThrow(() -> new RuntimeException("Comprador no encontrado en el contexto de seguridad"));
     }
 
+    // Endpoint para obtener todas las direcciones del comprador autenticado con paginación
+
     @GetMapping
     public ResponseEntity<Page<Direccion>> getDirecciones(
             @RequestParam(required = false) Integer page,
@@ -48,6 +50,8 @@ public class DireccionController {
         return ResponseEntity.ok(direcciones);
     }
 
+    // Endpoint para obtener Direccion por ID
+    
     @GetMapping("/{direccionId}")
     public ResponseEntity<Direccion> getDireccionById(@PathVariable Long direccionId) {
         Comprador comprador = getAuthenticatedComprador();
@@ -58,6 +62,8 @@ public class DireccionController {
             return ResponseEntity.notFound().build();
         }
     }
+    
+    // Endpoint para crear Direccion
 
     @PostMapping
     public ResponseEntity<Object> createDireccion(@RequestBody DireccionRequest direccionRequest) {
@@ -75,6 +81,8 @@ public class DireccionController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    // Endpoint para actualizar Direccion
 
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateDireccion(
@@ -96,6 +104,8 @@ public class DireccionController {
         }
     }
 
+    // Endpoint para eliminar Direccion
+    
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteDireccion(@PathVariable Long id) {
         try {

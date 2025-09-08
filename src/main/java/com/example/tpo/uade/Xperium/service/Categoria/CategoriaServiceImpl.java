@@ -18,26 +18,31 @@ public class CategoriaServiceImpl  implements CategoriaService {
     @Autowired
     private CategoriaRepository categoriaRepository;
  
+    // metodo para obtener todas las categorias con paginacion
     public Page<Categoria> getCategorias(PageRequest pageRequest) {
         return categoriaRepository.findAll(pageRequest);
     }
 
+    // metodo para obtener una categoria por id
     public Optional<Categoria> getCategoriasById(Long id) {
        return categoriaRepository.findById(id);
     }
    
+   // metodo para crear una categoria
     public Categoria createCategoria(String descripcion, String imagenUrl) throws CategoriaDuplicadaException {
         List<Categoria> categorias = categoriaRepository.findByDescription(descripcion);
         if (categorias.isEmpty()) {
-            return categoriaRepository.save(new Categoria(descripcion, imagenUrl)); //Guardo y retorno la nueva categoria
+            return categoriaRepository.save(new Categoria(descripcion, imagenUrl)); 
         }
-        throw new CategoriaDuplicadaException(); //Falta ver que hacer si ya existe la categoria
+        throw new CategoriaDuplicadaException(); 
     }
 
+    // metodo para eliminar una categoria por id
     public void deleteCategoria(Long id) {
         categoriaRepository.deleteById(id);
     }
 
+    // metodo para actualizar una categoria
     public Categoria updateCategoria(Long id, String descripcion, String imagenUrl) throws Exception {
         Categoria categoriaOpt = categoriaRepository.findById(id).orElseThrow(() -> new Exception("Categoria no encontrada"));
         categoriaOpt.setDescripcion(descripcion);

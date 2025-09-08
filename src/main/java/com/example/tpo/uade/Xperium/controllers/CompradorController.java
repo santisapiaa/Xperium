@@ -30,6 +30,8 @@ public class CompradorController {
     @Autowired
     private CompradorRepository compradorRepository;
 
+    // Método para obtener el Comprador autenticado
+
     private Comprador getAuthenticatedComprador() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
@@ -37,11 +39,15 @@ public class CompradorController {
             .orElseThrow(() -> new RuntimeException("Comprador no encontrado en el contexto de seguridad"));
     }
 
+    // Endpoint para obtener COMPRADOR autenticado
+
     @GetMapping("/micuenta")
     public ResponseEntity<Comprador> getCurrentComprador() {
         Comprador comprador = getAuthenticatedComprador();
         return ResponseEntity.ok(comprador);
     }
+
+    // Endpoint para obtener COMPRADOR por ID
 
     @GetMapping("/{compradorId}")
     public ResponseEntity<Comprador> getCompradorById(@PathVariable Long compradorId) {
@@ -57,6 +63,8 @@ public class CompradorController {
         }
     }
 
+    // Endpoint para crear COMPRADOR
+
     @PostMapping
     public ResponseEntity<Object> createComprador(@RequestBody CompradorRequest compradorRequest) {
         try {
@@ -70,6 +78,8 @@ public class CompradorController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    // Endpoint para actualizar COMPRADOR
 
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateComprador(@PathVariable Long id, @RequestBody CompradorRequest compradorRequest) {
@@ -85,6 +95,8 @@ public class CompradorController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    // Endpoint para eliminar COMPRADOR
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteComprador(@PathVariable Long id) {

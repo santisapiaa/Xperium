@@ -21,31 +21,36 @@ public class ProductoServiceImpl implements ProductoService {
     @Autowired
     private ProductoRepository productoRepository;
 
+    // metodo para obtener todos los productos con paginacion
     @Override
     public Page<Producto> getProducto(PageRequest pageRequest) {
         return productoRepository.findAll(pageRequest);
     }
 
+    // metodo para obtener productos por proveedorId con paginacion
     @Override
     public Page<Producto> getProductoByProveedorId(Long proveedorId, PageRequest pageRequest) {
         return productoRepository.findByProveedorId(proveedorId, pageRequest);
     }
 
+    // metodo para obtener un producto por id
     @Override
     public Optional<Producto> getProductoById(Long id) {
         return productoRepository.findById(id);
     }
 
-
+    // metodo para obtener productos por categoriaId con paginacion
     public Page<Producto> getProductoByCategoriaId(Long categoriaId,PageRequest pageRequest) {
         return productoRepository.findByCategoriaId(categoriaId,pageRequest);
     }
 
+    // metodo para obtener un producto por id y proveedorId
     @Override
     public Optional<Producto> getProductoByIdAndProveedorId(Long id, Long proveedorId) {
         return productoRepository.findByIdAndProveedorId(id, proveedorId);
     }
 
+    // metodo para crear un producto
     @Override
     public Producto createProducto(String nombre, String descripcion, String imagenUrl, double precio, String estado, int stock, String ubicacion, int cantPersonas, Categoria categoria, Proveedor proveedor) throws CategoriaDuplicadaException {
         List<Producto> productos = productoRepository.findByNombre(nombre);
@@ -54,6 +59,7 @@ public class ProductoServiceImpl implements ProductoService {
         }
         throw new CategoriaDuplicadaException();
     } 
+    
     
     @Override
     public void deleteProducto(Long id) {

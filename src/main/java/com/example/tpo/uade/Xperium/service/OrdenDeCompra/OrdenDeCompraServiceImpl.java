@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.tpo.uade.Xperium.entity.Comprador;
 import com.example.tpo.uade.Xperium.entity.OrdenDeCompra;
+import com.example.tpo.uade.Xperium.entity.Producto;
 import com.example.tpo.uade.Xperium.exceptions.CategoriaDuplicadaException;
 import com.example.tpo.uade.Xperium.repository.OrdenDeCompraRepository;
 
@@ -57,12 +58,16 @@ public class OrdenDeCompraServiceImpl implements OrdenDeCompraService {
             OrdenDeCompra orden = ordenOpt.get();
             // Verificar que la orden esté en estado PENDIENTE
             if ("PENDIENTE".equals(orden.getEstado())) {
+                for (var detalle : orden.getDetalleOrdenDeCompra()) {
+                    Producto producto = detalle.getProducto();
+                    if (producto.getStock() < detalle.getCantidad()) {
+                        throw new RuntimeException("Stock insuficiente para el producto: " + producto.getNombre());
+                    }
+                    // Descontar el stock del producto
+                    producto.setStock(producto.getStock() - detalle.getCantidad());
+                }
+                
                 orden.setEstado("FINALIZADA");
-                // Opcional: Coordinar con DetalleOrdenDeCompraService para confirmar stock
-                orden.getDetalleOrdenDeCompra().forEach(detalle -> {
-                    // Aquí podrías llamar a un método para confirmar el stock permanentemente
-                    // Ejemplo: detalleOrdenDeCompraService.confirmStock(detalle);
-                });
                 return ordenDeCompraRepository.save(orden);
             } else {
                 throw new RuntimeException("La orden no está en estado PENDIENTE");

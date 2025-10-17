@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -115,6 +116,29 @@ public class OrdenDeCompraController {
                     return ResponseEntity.ok(orden);
                 } else {
                     return ResponseEntity.badRequest().body("La orden no está en estado PENDIENTE o no tiene productos agregados.");
+                }
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/{ordenDeCompraId}")
+    public ResponseEntity<Object> deleteOrdenDeCompra(@PathVariable Long ordenDeCompraId) {
+        try {
+            Comprador comprador = getAuthenticatedComprador();
+            Optional<OrdenDeCompra> ordenOpt = ordenDeCompraService.getOrdenesDeCompraByIdAndCompradorId(ordenDeCompraId, comprador.getId());
+            if (ordenOpt.isPresent()) {
+                OrdenDeCompra orden = ordenOpt.get();
+                // Solo se pueden eliminar órdenes pendientes
+                if ("PENDIENTE".equals(orden.getEstado())) {
+                    // No es necesario liberar stock porque nunca se descontó
+                    ordenDeCompraService.deleteOrdenDeCompra(ordenDeCompraId);
+                    return ResponseEntity.ok().body("Orden cancelada exitosamente");
+                } else {
+                    return ResponseEntity.badRequest().body("Solo se pueden cancelar órdenes en estado PENDIENTE");
                 }
             } else {
                 return ResponseEntity.notFound().build();

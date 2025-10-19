@@ -14,7 +14,6 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 
 import lombok.RequiredArgsConstructor;
 
-
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -33,10 +32,9 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/productos/**").hasAuthority("ROLE_VENDEDOR")
                 .requestMatchers(HttpMethod.PUT, "/productos/**").hasAuthority("ROLE_VENDEDOR")
                 .requestMatchers(HttpMethod.DELETE, "/productos/**").hasAuthority("ROLE_VENDEDOR")
-                .requestMatchers("/productos/**").hasAnyAuthority("ROLE_VENDEDOR")
                 .requestMatchers("/ordenesDeCompra/**").hasAnyAuthority("ROLE_COMPRADOR", "ROLE_VENDEDOR")
                 .requestMatchers("/detallesOrdenDeCompra/**").hasAnyAuthority("ROLE_COMPRADOR", "ROLE_VENDEDOR")
-                .requestMatchers(HttpMethod.GET, "/categorias/**").hasAnyAuthority("ROLE_VENDEDOR", "ROLE_COMPRADOR","ROLE_ADMIN")
+                .requestMatchers(HttpMethod.GET, "/categorias/**").permitAll()
                 .requestMatchers("/categorias/**").hasAuthority("ROLE_ADMIN")
                 .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
                 .anyRequest().authenticated())

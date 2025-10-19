@@ -199,9 +199,29 @@ public class ProductoController {
                 categoriaOpt.get(),
                 proveedor // Usar el proveedor autenticado
             );
+            
+            // Apply discount if provided
+            if (productoRequest.getDescuento() > 0) {
+                resultado.setPrecioConDescuento(productoRequest.getDescuento());
+                productoService.updateProducto(
+                    resultado.getId(),
+                    resultado.getNombre(),
+                    resultado.getDescripcion(),
+                    resultado.getImagenUrl(),
+                    resultado.getPrecio(),
+                    resultado.getEstado(),
+                    resultado.getStock(),
+                    resultado.getUbicacion(),
+                    resultado.getCantPersonas(),
+                    resultado.getCategoria()
+                );
+            }
+            
             return ResponseEntity.created(URI.create("/productos/" + resultado.getId())).body("Producto creado con éxito");
         } catch (CategoriaDuplicadaException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Ya existe un producto con este nombre.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al crear producto: " + e.getMessage());
         }
     }
 
@@ -217,19 +237,37 @@ public class ProductoController {
             return ResponseEntity.badRequest().build();
         }
         try {
+            Optional<Producto> productoOpt = productoService.getProductoByIdAndProveedorId(id, proveedor.getId());
+            if (productoOpt.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+            
+            Producto producto = productoOpt.get();
+            
+            // Apply discount to the new price
+            if (productoRequest.getDescuento() >= 0) {
+                producto.setPrecio(productoRequest.getPrecio());
+                producto.setDescuento(0); // Reset discount first
+                if (productoRequest.getDescuento() > 0) {
+                    producto.setPrecioConDescuento(productoRequest.getDescuento());
+                }
+            }
+            
+            // Update other fields
             Producto updated = productoService.updateProductoByIdAndProveedorId(
                 id,
                 proveedor.getId(),
                 productoRequest.getNombre(),
                 productoRequest.getDescripcion(),
                 productoRequest.getImagenUrl(),
-                productoRequest.getPrecio(),
+                producto.getPrecio(), // Use the price after discount calculation
                 productoRequest.getEstado(),
                 productoRequest.getStock(),
                 productoRequest.getUbicacion(),
                 productoRequest.getCantPersonas(),
                 categoriaOpt.get()
             );
+            
             ProductoRequest dto = new ProductoRequest();
             dto.setId(updated.getId());
             dto.setNombre(updated.getNombre());

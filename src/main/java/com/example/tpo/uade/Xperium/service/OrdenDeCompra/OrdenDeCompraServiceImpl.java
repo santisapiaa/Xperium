@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import com.example.tpo.uade.Xperium.entity.Comprador;
 import com.example.tpo.uade.Xperium.entity.OrdenDeCompra;
-import com.example.tpo.uade.Xperium.entity.Producto;
 import com.example.tpo.uade.Xperium.exceptions.CategoriaDuplicadaException;
 import com.example.tpo.uade.Xperium.repository.OrdenDeCompraRepository;
 
@@ -41,39 +40,12 @@ public class OrdenDeCompraServiceImpl implements OrdenDeCompraService {
     }
 
     @Override
-    public OrdenDeCompra createOrdenDeCompra(LocalDate fecha, double total, String estado, Comprador comprador) throws CategoriaDuplicadaException {
-        return ordenDeCompraRepository.save(new OrdenDeCompra(fecha, total, estado, comprador));
+    public OrdenDeCompra createOrdenDeCompra(LocalDate fecha, double total, Comprador comprador) throws CategoriaDuplicadaException {
+        return ordenDeCompraRepository.save(new OrdenDeCompra(fecha, total, comprador));
     }
 
     @Override
     public void deleteOrdenDeCompra(Long id) {
         ordenDeCompraRepository.deleteById(id);
-    }
-
-    @Override
-    public OrdenDeCompra finalizeOrdenDeCompra(Long id) {
-        // Buscar la orden por ID
-        Optional<OrdenDeCompra> ordenOpt = ordenDeCompraRepository.findById(id);
-        if (ordenOpt.isPresent()) {
-            OrdenDeCompra orden = ordenOpt.get();
-            // Verificar que la orden esté en estado PENDIENTE
-            if ("PENDIENTE".equals(orden.getEstado())) {
-                for (var detalle : orden.getDetalleOrdenDeCompra()) {
-                    Producto producto = detalle.getProducto();
-                    if (producto.getStock() < detalle.getCantidad()) {
-                        throw new RuntimeException("Stock insuficiente para el producto: " + producto.getNombre());
-                    }
-                    // Descontar el stock del producto
-                    producto.setStock(producto.getStock() - detalle.getCantidad());
-                }
-                
-                orden.setEstado("FINALIZADA");
-                return ordenDeCompraRepository.save(orden);
-            } else {
-                throw new RuntimeException("La orden no está en estado PENDIENTE");
-            }
-        } else {
-            throw new RuntimeException("Orden no encontrada");
-        }
     }
 }

@@ -12,7 +12,6 @@ public class OrdenDeCompraRequest {
 
     private double total;
     
-    private String estado;
 
     private Long compradorId;
 

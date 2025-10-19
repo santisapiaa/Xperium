@@ -21,10 +21,9 @@ public class ProductoServiceImpl implements ProductoService {
     @Autowired
     private ProductoRepository productoRepository;
 
-    // metodo para obtener todos los productos con paginacion
     @Override
     public Page<Producto> getProducto(PageRequest pageRequest) {
-        return productoRepository.findAll(pageRequest);
+        return productoRepository.findAllWithStock(pageRequest);
     }
 
     // metodo para obtener productos por proveedorId con paginacion

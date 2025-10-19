@@ -14,15 +14,12 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.tpo.uade.Xperium.entity.Comprador;
 import com.example.tpo.uade.Xperium.entity.OrdenDeCompra;
-import com.example.tpo.uade.Xperium.entity.dto.OrdenDeCompraRequest;
 import com.example.tpo.uade.Xperium.repository.CompradorRepository;
 import com.example.tpo.uade.Xperium.service.OrdenDeCompra.OrdenDeCompraService;
 
@@ -82,18 +79,10 @@ public class OrdenDeCompraController {
             Comprador comprador = getAuthenticatedComprador();
             LocalDate fecha = LocalDate.now();
 
-            // Verificar si hay órdenes pendientes
-            Page<OrdenDeCompra> ordenesPendientes = ordenDeCompraService.getOrdenesDeCompraByCompradorId(comprador.getId(), PageRequest.of(0, Integer.MAX_VALUE));
-            for (OrdenDeCompra orden : ordenesPendientes) {
-                if ("PENDIENTE".equals(orden.getEstado())) {
-                    return ResponseEntity.badRequest().body("Ya tienes una orden pendiente. Finalizala antes de crear una nueva.");
-                }
-            }
 
             OrdenDeCompra resultado = ordenDeCompraService.createOrdenDeCompra(
                     fecha,
                     0.0,
-                    "PENDIENTE",
                     comprador
             );
             return ResponseEntity.created(URI.create("/ordenesDeCompra/" + resultado.getId())).body(resultado);
@@ -102,28 +91,6 @@ public class OrdenDeCompraController {
         }
     }
 
-    // Endpoint para finalizar una orden de compra
-    
-    @PutMapping("/{ordenDeCompraId}/finalizar")
-    public ResponseEntity<Object> finalizeOrdenDeCompra(@PathVariable Long ordenDeCompraId) {
-        try {
-            Comprador comprador = getAuthenticatedComprador();
-            Optional<OrdenDeCompra> ordenOpt = ordenDeCompraService.getOrdenesDeCompraByIdAndCompradorId(ordenDeCompraId, comprador.getId());
-            if (ordenOpt.isPresent()) {
-                OrdenDeCompra orden = ordenOpt.get();
-                if ("PENDIENTE".equals(orden.getEstado()) && orden.getTotal() > 0) {
-                    orden = ordenDeCompraService.finalizeOrdenDeCompra(ordenDeCompraId);
-                    return ResponseEntity.ok(orden);
-                } else {
-                    return ResponseEntity.badRequest().body("La orden no está en estado PENDIENTE o no tiene productos agregados.");
-                }
-            } else {
-                return ResponseEntity.notFound().build();
-            }
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
 
     @DeleteMapping("/{ordenDeCompraId}")
     public ResponseEntity<Object> deleteOrdenDeCompra(@PathVariable Long ordenDeCompraId) {
@@ -131,15 +98,8 @@ public class OrdenDeCompraController {
             Comprador comprador = getAuthenticatedComprador();
             Optional<OrdenDeCompra> ordenOpt = ordenDeCompraService.getOrdenesDeCompraByIdAndCompradorId(ordenDeCompraId, comprador.getId());
             if (ordenOpt.isPresent()) {
-                OrdenDeCompra orden = ordenOpt.get();
-                // Solo se pueden eliminar órdenes pendientes
-                if ("PENDIENTE".equals(orden.getEstado())) {
-                    // No es necesario liberar stock porque nunca se descontó
-                    ordenDeCompraService.deleteOrdenDeCompra(ordenDeCompraId);
-                    return ResponseEntity.ok().body("Orden cancelada exitosamente");
-                } else {
-                    return ResponseEntity.badRequest().body("Solo se pueden cancelar órdenes en estado PENDIENTE");
-                }
+                ordenDeCompraService.deleteOrdenDeCompra(ordenDeCompraId);
+                return ResponseEntity.ok().body("Orden cancelada exitosamente");
             } else {
                 return ResponseEntity.notFound().build();
             }

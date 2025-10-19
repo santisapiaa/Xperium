@@ -20,9 +20,8 @@ public interface OrdenDeCompraService {
 
     public Page<OrdenDeCompra> getOrdenesDeCompraByCompradorId(Long compradorId, PageRequest pageRequest);
 
-    public OrdenDeCompra createOrdenDeCompra(LocalDate fecha, double total, String estado, Comprador comprador) throws CategoriaDuplicadaException;
+    public OrdenDeCompra createOrdenDeCompra(LocalDate fecha, double total, Comprador comprador) throws CategoriaDuplicadaException;
 
     public void deleteOrdenDeCompra(Long id);
 
-    public OrdenDeCompra finalizeOrdenDeCompra(Long id);
 }

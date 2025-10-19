@@ -25,7 +25,5 @@ public interface OrdenDeCompraRepository extends JpaRepository<OrdenDeCompra, Lo
     @Query(value = "select o from OrdenDeCompra o where o.fecha = ?1")
     List<OrdenDeCompra> findByFecha(LocalDate fecha);
 
-    @Query(value = "select o from OrdenDeCompra o where o.estado = ?1")
-    List<OrdenDeCompra> findByEstado(String estado);
 
 }

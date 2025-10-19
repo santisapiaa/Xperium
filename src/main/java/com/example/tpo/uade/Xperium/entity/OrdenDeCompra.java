@@ -28,8 +28,6 @@ public class OrdenDeCompra {
     private LocalDate fecha;
     @Column
     private double total;
-    @Column
-    private String estado;
 
     @ManyToOne
     @JoinColumn(name = "compradorId", nullable = false)
@@ -42,10 +40,9 @@ public class OrdenDeCompra {
     public OrdenDeCompra() {
     }
 
-    public OrdenDeCompra(LocalDate fecha, double total, String estado, Comprador comprador) {
+    public OrdenDeCompra(LocalDate fecha, double total, Comprador comprador) {
         this.fecha = fecha;
         this.total = total;
-        this.estado = estado;
         this.comprador = comprador;
     }
 

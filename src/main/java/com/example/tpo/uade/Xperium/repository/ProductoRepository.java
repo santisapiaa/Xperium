@@ -19,7 +19,7 @@ public interface ProductoRepository extends JpaRepository<Producto, Long> {
     @Query(value = "select p from Producto p where p.nombre = ?1")
     List<Producto> findByNombre(String nombre);
 
-    @Query(value = "select p from Producto p where p.categoria.id = ?1")
+    @Query(value = "select p from Producto p where p.categoria.id = ?1 and p.stock > 0")
     Page<Producto> findByCategoriaId(Long categoriaId, PageRequest pageRequest);
 
     @Query(value = "select p from Producto p where p.proveedor.id = ?1")
@@ -27,4 +27,7 @@ public interface ProductoRepository extends JpaRepository<Producto, Long> {
 
     @Query(value = "select p from Producto p where p.id = ?1 and p.proveedor.id = ?2")
     Optional<Producto> findByIdAndProveedorId(Long id, Long proveedorId);
+    
+    @Query(value = "select p from Producto p where p.stock > 0")
+    Page<Producto> findAllWithStock(PageRequest pageRequest);
 }

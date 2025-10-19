@@ -70,9 +70,6 @@ public class DetalleOrdenDeCompraController {
             }
             
             OrdenDeCompra ordenDeCompra = ordenDeCompraOpt.get();
-            if (!"PENDIENTE".equals(ordenDeCompra.getEstado())) {
-                return ResponseEntity.badRequest().body("Solo se pueden agregar productos a órdenes en estado PENDIENTE");
-            }
             
             // Verificar si el producto existe
             Optional<Producto> productoOpt = productoRepository.findById(detalleOrdenDeCompraRequest.getProductoId());
@@ -85,6 +82,9 @@ public class DetalleOrdenDeCompraController {
                 return ResponseEntity.badRequest().body("Stock insuficiente o producto no disponible");
             }
 
+            producto.setStock(producto.getStock() - detalleOrdenDeCompraRequest.getCantidad());
+            productoRepository.save(producto);
+
             DetalleOrdenDeCompra resultado = detalleOrdenDeCompraService.createDetalleOrdenDeCompra(
                 detalleOrdenDeCompraRequest.getCantidad(),
                 productoOpt.get().getPrecio() * detalleOrdenDeCompraRequest.getCantidad(),
@@ -94,8 +94,6 @@ public class DetalleOrdenDeCompraController {
 
             ordenDeCompra.setTotal(ordenDeCompra.getTotal() + resultado.getPrecioUnitario());
             ordenDeCompraRepository.save(ordenDeCompra);
-
-            // El stock se descontará en el método finalizeOrdenDeCompra
             
             return ResponseEntity.created(URI.create("/detallesOrdenDeCompra/" + resultado.getId())).body(resultado);
         } catch (Exception e) {

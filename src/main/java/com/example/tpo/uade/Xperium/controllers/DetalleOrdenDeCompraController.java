@@ -87,12 +87,12 @@ public class DetalleOrdenDeCompraController {
 
             DetalleOrdenDeCompra resultado = detalleOrdenDeCompraService.createDetalleOrdenDeCompra(
                 detalleOrdenDeCompraRequest.getCantidad(),
-                productoOpt.get().getPrecio() * detalleOrdenDeCompraRequest.getCantidad(),
+                productoOpt.get().getPrecio(),
                 productoOpt.get(),
                 ordenDeCompra
             );
 
-            ordenDeCompra.setTotal(ordenDeCompra.getTotal() + resultado.getPrecioUnitario());
+            ordenDeCompra.setTotal(ordenDeCompra.getTotal() + (resultado.getPrecioUnitario() * resultado.getCantidad()));
             ordenDeCompraRepository.save(ordenDeCompra);
             
             return ResponseEntity.created(URI.create("/detallesOrdenDeCompra/" + resultado.getId())).body(resultado);
